@@ -1,328 +1,199 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação de Desempenho</title>
-    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário Administrativo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
-        body {
-            font-family: 'Ubuntu', sans-serif;
-            background-color: #f5f5f5;
-            color: #202124;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #f5f5f5;
+      color: #202124;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 800px;
-            margin-top: 80px;
-            padding: 0 20px;
-            box-sizing: border-box;
-        }
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin-top: 80px;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
 
-        /* Barra superior */
-        header {
-            background-color: #004070;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            box-sizing: border-box;
-        }
+    .header {
+      background-color: #004070;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      box-sizing: border-box;
+    }
 
-        header img {
-            max-height: 40px;
-            margin-right: 20px;
-        }
+    .header img {
+      max-height: 40px;
+    }
 
-        .toggle-dark-mode {
-            font-size: 20px;
-            cursor: pointer;
-            margin-left: auto;
-        }
+    .toggle-dark-mode {
+      font-size: 24px;
+      cursor: pointer;
+    }
 
-        /* Imagem de cabeçalho */
-        .form-header-image {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
+    .form-header-image {
+      width: calc(100% + 60px);
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      object-fit: cover;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
 
-        /* Barra amarela */
-        .yellow-bar {
-            background-color: #f5c200;
-            height: 12px;
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: -12px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
+    .yellow-bar {
+      background-color: #f5c200;
+      height: 12px;
+      width: calc(100% + 60px);
+      margin: 0 auto;
+      transform: translateX(-30px);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
 
-        /* Formulário */
-        .form-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 50px;
-        }
+    .form-container {
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-radius: 0 0 8px 8px;
+      padding: 30px;
+      margin-bottom: 50px;
+    }
 
-        /* Seções de perguntas com separação clara */
-        .form-section {
-            margin-bottom: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
+    .form-section {
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
 
-        /* Perguntas */
-        .form-question-card {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease-in-out;
-        }
+    h3 {
+      font-size: 18px;
+      color: #004070;
+    }
 
-        .form-question-label {
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: block;
-            color: #004070;
-        }
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
 
-        /* Escala linear estilo Google Forms */
-        .scale {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    input[type="radio"] {
+      margin: 10px 0;
+    }
 
-        .scale label {
-            font-size: 14px;
-        }
+    button {
+      background-color: #ea5a33;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .options {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
+    button:hover {
+      background-color: #0f96ae;
+      color: white;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-        .options label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0 5px;
-        }
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
 
-        .options input[type="radio"] {
-            display: none; /* Esconde o input real */
-        }
-
-        /* Estilo do círculo do Google Forms */
-        .options input[type="radio"] + label::before {
-            content: '';
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #202124;
-            border-radius: 50%;
-            position: relative;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .options input[type="radio"]:checked + label::before {
-            border-color: #4285f4;
-        }
-
-        /* Ponto azul no centro */
-        .options input[type="radio"]:checked + label::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            background-color: #4285f4;
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        /* Estilo visual dos inputs e textos */
-        input[type="text"], input[type="email"], select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #dadce0;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        input[type="text"]:focus, input[type="email"]:focus, select:focus {
-            border-color: #4285f4;
-            box-shadow: 0px 0px 6px rgba(66, 133, 244, 0.5);
-            outline: none;
-        }
-
-        /* Modo escuro */
-        body.dark-mode {
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-
-        body.dark-mode .form-container {
-            background-color: #333;
-            color: #fff;
-            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .dark-mode .form-question-card {
-            background-color: #444;
-            color: #fff;
-        }
-
-    </style>
+    body.dark-mode .form-container {
+      background-color: #333;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Barra superior com logotipo e modo escuro -->
-        <header>
-            <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
-            <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
-        </header>
+  <!-- Cabeçalho com logotipo e modo noturno -->
+  <div class="header">
+    <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+    <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
+  </div>
 
-        <!-- Cabeçalho com imagem -->
-        <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" alt="Cabeçalho do Formulário" class="form-header-image">
+  <div class="container">
+    <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" alt="Cabeçalho do Formulário" class="form-header-image">
+    <div class="yellow-bar"></div>
 
-        <!-- Barra amarela -->
-        <div class="yellow-bar"></div>
-
-        <!-- Conteúdo do formulário -->
-        <div class="form-container">
-            <h1 style="font-size: 18px;">Avaliação de Desempenho</h1>
-
-            <form id="avaliacaoForm">
-                <!-- Pergunta 1 -->
-                <div class="form-question-card">
-                    <label class="form-question-label">O colaborador busca aprimorar seus conhecimentos?</label>
-                    <div class="scale">
-                        <span>Discordo totalmente</span>
-                        <div class="options">
-                            <input type="radio" id="pergunta1_1" name="pergunta1" value="1"><label for="pergunta1_1">1</label>
-                            <input type="radio" id="pergunta1_2" name="pergunta1" value="2"><label for="pergunta1_2">2</label>
-                            <input type="radio" id="pergunta1_3" name="pergunta1" value="3"><label for="pergunta1_3">3</label>
-                            <input type="radio" id="pergunta1_4" name="pergunta1" value="4"><label for="pergunta1_4">4</label>
-                            <input type="radio" id="pergunta1_5" name="pergunta1" value="5"><label for="pergunta1_5">5</label>
-                        </div>
-                        <span>Concordo totalmente</span>
-                    </div>
-                </div>
-
-                <!-- Pergunta 2 -->
-                <div class="form-question-card">
-                    <label class="form-question-label">O colaborador demonstra criatividade nas soluções?</label>
-                    <div class="scale">
-                        <span>Discordo totalmente</span>
-                        <div class="options">
-                            <input type="radio" id="pergunta2_1" name="pergunta2" value="1"><label for="pergunta2_1">1</label>
-                            <input type="radio" id="pergunta2_2" name="pergunta2" value="2"><label for="pergunta2_2">2</label>
-                            <input type="radio" id="pergunta2_3" name="pergunta2" value="3"><label for="pergunta2_3">3</label>
-                            <input type="radio" id="pergunta2_4" name="pergunta2" value="4"><label for="pergunta2_4">4</label>
-                            <input type="radio" id="pergunta2_5" name="pergunta2" value="5"><label for="pergunta2_5">5</label>
-                        </div>
-                        <span>Concordo totalmente</span>
-                    </div>
-                </div>
-
-                <!-- Nome Completo -->
-                <div class="form-question-card">
-                    <label class="form-question-label" for="nome">Nome Completo</label>
-                    <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
-                </div>
-
-                <!-- Matrícula -->
-                <div class="form-question-card">
-                    <label class="form-question-label" for="matricula">Matrícula</label>
-                    <input type="text" id="matricula" name="matricula" required placeholder="Digite sua matrícula">
-                </div>
-
-                <!-- Botão de Envio -->
-                <button type="submit" class="submit-button">Enviar Avaliação</button>
-            </form>
-
+    <div class="form-container">
+      <h3>Formulário Administrativo</h3>
+      <form id="administrativoForm" onsubmit="submitForm(event)">
+        <!-- Pergunta exemplo -->
+        <div class="form-section">
+          <label>O colaborador busca aprimorar constantemente seu conhecimento?</label>
+          <input type="radio" name="pergunta1" value="1"> Discordo totalmente<br>
+          <input type="radio" name="pergunta1" value="2"> Discordo<br>
+          <input type="radio" name="pergunta1" value="3"> Neutro<br>
+          <input type="radio" name="pergunta1" value="4"> Concordo<br>
+          <input type="radio" name="pergunta1" value="5"> Concordo totalmente<br>
         </div>
+        <!-- Adicione mais perguntas -->
+
+        <button type="submit">Enviar</button>
+      </form>
     </div>
+  </div>
 
-<script>
-// Função para alternar entre modo claro e escuro
-function toggleMode() {
-    const isDarkMode = document.body.classList.toggle('dark-mode');
-    document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
-    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-}
+  <script>
+    function submitForm(event) {
+      event.preventDefault();
+      const form = document.getElementById('administrativoForm');
+      const formData = {
+        pergunta1: form.querySelector('input[name="pergunta1"]:checked').value,
+        // Adicione mais perguntas conforme necessário
+      };
 
-// Carregar preferências de modo escuro
-function loadDarkModePreference() {
-    const darkModePreference = localStorage.getItem('darkMode');
-    if (darkModePreference === 'enabled') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('darkModeToggle').textContent = '☀️';
+      google.script.run.withSuccessHandler(function() {
+        alert('Formulário enviado com sucesso!');
+        form.reset();
+      }).submitData(formData);
     }
-}
 
-// Função para enviar o formulário
-document.getElementById('avaliacaoForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Previne o envio padrão do formulário
+    const toggleDarkMode = document.getElementById('darkModeToggle');
+    const body = document.body;
 
-    const nome = document.getElementById('nome').value;
-    const matricula = document.getElementById('matricula').value;
+    function toggleMode() {
+      const isDarkMode = body.classList.toggle('dark-mode');
+      toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    }
 
-    Swal.fire({
-        title: 'Avaliação Enviada!',
-        text: `Obrigado pela sua avaliação, ${nome}.`,
-        icon: 'success',
-        confirmButtonText: 'Fechar'
-    });
+    toggleDarkMode.addEventListener('click', toggleMode);
 
-    // Reseta o formulário
-    document.getElementById('avaliacaoForm').reset();
-});
-
-// Executar ao carregar a página
-window.onload = function() {
-    loadDarkModePreference();
-    document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
-};
-
-</script>
+    window.onload = function() {
+      const darkModePreference = localStorage.getItem('darkMode');
+      if (darkModePreference === 'enabled') {
+        body.classList.add('dark-mode');
+        toggleDarkMode.textContent = '☀️';
+      }
+    };
+  </script>
 </body>
 </html>

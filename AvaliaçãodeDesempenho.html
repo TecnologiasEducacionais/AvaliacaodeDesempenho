@@ -7,9 +7,7 @@
     <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <!-- CSS Original Mantido -->
     <style>
-        /* O CSS original permanece aqui, como foi solicitado */
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
         body {
             font-family: 'Ubuntu', sans-serif;
@@ -112,51 +110,48 @@
 </div>
 
 <script>
-// Perguntas e pesos para Administrativo
-const perguntasAdministrativo = [
-    { pergunta: "O colaborador busca aprimorar seu conhecimento em sua área de atuação.", peso: 3 },
-    { pergunta: "O colaborador demonstra criatividade na solução de problemas.", peso: 2 }
-    // Adicione mais perguntas conforme necessário
-];
+// Função para carregar as perguntas do JSON
+async function carregarPerguntas(perfil) {
+     try {
+        // Escolher o arquivo JSON baseado no perfil selecionado
+        const arquivoJson = perfil === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
+        
+        // Carregar o arquivo JSON
+        const response = await fetch(arquivoJson);
+        const data = await response.json(); // Converter para objeto JS
+        const perguntas = perfil === 'administrativo' ? data.administrativo : data.docente;
 
-// Perguntas e pesos para Docentes
-const perguntasDocentes = [
-    { pergunta: "O professor busca aprimorar seu conhecimento em sua área de atuação.", peso: 3 },
-    { pergunta: "O professor utiliza abordagens inovadoras para o aprendizado.", peso: 2 }
-    // Adicione mais perguntas conforme necessário
-];
-
-// Função para carregar perguntas com base no perfil escolhido
-function carregarFormulario(perfil) {
-    const form = document.getElementById('form-avaliacao');
-    let perguntas = perfil === 'administrativo' ? perguntasAdministrativo : perguntasDocentes;
-
-    perguntas.forEach((item, index) => {
-        const questionDiv = document.createElement('div');
-        questionDiv.classList.add('question');
-        questionDiv.innerHTML = `
-            <label>${item.pergunta} (Peso: ${item.peso})</label>
-            <input type="radio" name="pergunta${index}" value="1"> Discordo totalmente
-            <input type="radio" name="pergunta${index}" value="2"> Discordo
-            <input type="radio" name="pergunta${index}" value="3"> Neutro
-            <input type="radio" name="pergunta${index}" value="4"> Concordo
-            <input type="radio" name="pergunta${index}" value="5"> Concordo totalmente
-        `;
-        form.appendChild(questionDiv);
-    });
+        // Preencher o formulário com as perguntas
+        const form = document.getElementById('form-avaliacao');
+        perguntas.forEach((item, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            questionDiv.innerHTML = `
+                <label>${item.pergunta} (Peso: ${item.peso})</label>
+                <input type="radio" name="pergunta${index}" value="1"> Discordo totalmente
+                <input type="radio" name="pergunta${index}" value="2"> Discordo
+                <input type="radio" name="pergunta${index}" value="3"> Neutro
+                <input type="radio" name="pergunta${index}" value="4"> Concordo
+                <input type="radio" name="pergunta${index}" value="5"> Concordo totalmente
+            `;
+            form.appendChild(questionDiv);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar perguntas: ", error);
+        document.getElementById('form-avaliacao').innerHTML = "<p>Erro ao carregar as perguntas. Tente novamente mais tarde.</p>";
+    }
 }
 
 // Função para calcular a pontuação
 function calcularPontuacao() {
     let totalPontos = 0;
 
-    // Função para calcular a pontuação com base nas respostas
     const form = document.getElementById('form-avaliacao');
     const perguntas = form.querySelectorAll('.question');
     perguntas.forEach((pergunta, index) => {
         const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
         if (resposta) {
-            const peso = parseInt(resposta.value) * (            const peso = parseInt(resposta.value) * (perfil === 'administrativo' ? perguntasAdministrativo[index].peso : perguntasDocentes[index].peso);
+            const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
             totalPontos += peso;
         }
     });
@@ -174,13 +169,13 @@ function calcularPontuacao() {
     }
 }
 
-// Capturar o perfil da URL
+// Capturar o perfil da URL (docente ou administrativo)
 const params = new URLSearchParams(window.location.search);
 const perfil = params.get('perfil');
 
 // Carregar o formulário correto com base no perfil
 if (perfil) {
-    carregarFormulario(perfil);
+    carregarPerguntas(perfil);
 } else {
     document.getElementById('form-avaliacao').innerHTML = "<p>Perfil não selecionado. Por favor, volte e escolha seu perfil.</p>";
 }
@@ -188,4 +183,4 @@ if (perfil) {
 
 </body>
 </html>
-
+    

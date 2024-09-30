@@ -55,7 +55,7 @@
         }
 
         .toggle-dark-mode {
-            font-size: 20px; /* Reduz o tamanho da fonte */
+            font-size: 20px;
             cursor: pointer;
             margin-left: auto;
         }
@@ -63,7 +63,7 @@
         /* Imagem de cabeçalho */
         .form-header-image {
             width: 100%;
-            max-width: 800px; /* Garante que a imagem tenha a mesma largura que o formulário */
+            max-width: 800px;
             margin-bottom: 20px;
             border-radius: 8px;
             object-fit: cover;
@@ -76,8 +76,10 @@
             background-color: #f5c200;
             height: 12px;
             width: 100%;
-            max-width: 800px; /* Ajuste para a largura do formulário */
-            margin: 0 auto 20px;
+            max-width: 800px;
+            margin-bottom: -12px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
         }
 
         /* Formulário */
@@ -87,26 +89,29 @@
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            padding: 20px; /* Reduzi o padding para ajustar o layout */
+            padding: 20px;
             margin-bottom: 50px;
         }
 
-        /* Perguntas em cartões */
+        /* Seções de perguntas com separação clara */
+        .form-section {
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        /* Perguntas */
         .form-question-card {
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px; /* Reduzi o padding */
+            padding: 15px;
             margin-bottom: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s ease-in-out;
         }
 
-        .form-question-card:hover {
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
-        }
-
         .form-question-label {
-            font-size: 14px; /* Reduzi o tamanho da fonte */
+            font-size: 16px;
             margin-bottom: 10px;
             display: block;
             color: #004070;
@@ -118,11 +123,10 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
-            position: relative;
         }
 
         .scale label {
-            font-size: 13px; /* Reduzi o tamanho da fonte */
+            font-size: 14px;
         }
 
         .options {
@@ -146,43 +150,47 @@
         .options input[type="radio"] + label::before {
             content: '';
             display: inline-block;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border: 2px solid #202124;
             border-radius: 50%;
-            transition: border-color 0.3s ease;
             position: relative;
+            transition: all 0.2s ease-in-out;
         }
 
         .options input[type="radio"]:checked + label::before {
             border-color: #4285f4;
-            animation: smoothScale 0.3s ease;
         }
 
         /* Ponto azul no centro */
         .options input[type="radio"]:checked + label::after {
             content: '';
             position: absolute;
+            top: 50%;
+            left: 50%;
             width: 10px;
             height: 10px;
             background-color: #4285f4;
             border-radius: 50%;
-            top: 50%;
-            left: 50%;
             transform: translate(-50%, -50%);
         }
 
-        /* Animação mais suave */
-        @keyframes smoothScale {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
+        /* Estilo visual dos inputs e textos */
+        input[type="text"], input[type="email"], select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, select:focus {
+            border-color: #4285f4;
+            box-shadow: 0px 0px 6px rgba(66, 133, 244, 0.5);
+            outline: none;
         }
 
         /* Modo escuro */
@@ -221,55 +229,40 @@
         <!-- Conteúdo do formulário -->
         <div class="form-container">
             <h1 style="font-size: 18px;">Avaliação de Desempenho</h1>
+
             <!-- Perguntas do formulário inseridas aqui dinamicamente -->
             <div id="form-avaliacao"></div>
         </div>
     </div>
 
-
 <script>
-// Função para carregar as perguntas do JSON
-async function carregarPerguntas(perfil) {
-    try {
-        const arquivoJson = perfil === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
-        const response = await fetch(arquivoJson);
-        const data = await response.json();
-        const perguntas = perfil === 'administrativo' ? data.administrativo : data.docente;
+// Função para carregar as perguntas
+async function carregarPerguntas() {
+    const perguntas = [
+        "O colaborador busca aprimorar seus conhecimentos?",
+        "O colaborador demonstra criatividade nas soluções?"
+    ];
 
-        const form = document.getElementById('form-avaliacao');
-        perguntas.forEach((item, index) => {
-            const cardDiv = document.createElement('div');
-            cardDiv.classList.add('form-question-card');
-            cardDiv.innerHTML = `
-                <label class="form-question-label">${item.pergunta}</label>
-                <div class="scale">
-                    <span>Discordo totalmente</span>
-                    <div class="options">
-                        <input type="radio" id="pergunta${index}_1" name="pergunta${index}" value="1"><label for="pergunta${index}_1">1</label>
-                        <input type="radio" id="pergunta${index}_2" name="pergunta${index}" value="2"><label for="pergunta${index}_2">2</label>
-                        <input type="radio" id="pergunta${index}_3" name="pergunta${index}" value="3"><label for="pergunta${index}_3">3</label>
-                        <input type="radio" id="pergunta${index}_4" name="pergunta${index}" value="4"><label for="pergunta${index}_4">4</label>
-                        <input type="radio" id="pergunta${index}_5" name="pergunta${index}" value="5"><label for="pergunta${index}_5">5</label>
-                    </div>
-                    <span>Concordo totalmente</span>
+    const form = document.getElementById('form-avaliacao');
+    perguntas.forEach((item, index) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.classList.add('form-question-card');
+        cardDiv.innerHTML = `
+            <label class="form-question-label">${item}</label>
+            <div class="scale">
+                <span>Discordo totalmente</span>
+                <div class="options">
+                    <input type="radio" id="pergunta${index}_1" name="pergunta${index}" value="1"><label for="pergunta${index}_1">1</label>
+                    <input type="radio" id="pergunta${index}_2" name="pergunta${index}" value="2"><label for="pergunta${index}_2">2</label>
+                    <input type="radio" id="pergunta${index}_3" name="pergunta${index}" value="3"><label for="pergunta${index}_3">3</label>
+                    <input type="radio" id="pergunta${index}_4" name="pergunta${index}" value="4"><label for="pergunta${index}_4">4</label>
+                    <input type="radio" id="pergunta${index}_5" name="pergunta${index}" value="5"><label for="pergunta${index}_5">5</label>
                 </div>
-            `;
-            form.appendChild(cardDiv);
-        });
-    } catch (error) {
-        console.error("Erro ao carregar perguntas: ", error);
-        document.getElementById('form-avaliacao').innerHTML = "<p>Erro ao carregar as perguntas. Tente novamente mais tarde.</p>";
-    }
-}
-
-// Capturar o perfil da URL (docente ou administrativo)
-const params = new URLSearchParams(window.location.search);
-const perfil = params.get('perfil');
-
-if (perfil) {
-    carregarPerguntas(perfil);
-} else {
-    document.getElementById('form-avaliacao').innerHTML = "<p>Perfil não selecionado. Por favor, volte e escolha seu perfil.</p>";
+                <span>Concordo totalmente</span>
+            </div>
+        `;
+        form.appendChild(cardDiv);
+    });
 }
 
 // Função para alternar entre modo claro e escuro
@@ -291,6 +284,7 @@ function loadDarkModePreference() {
 // Executar ao carregar a página
 window.onload = function() {
     loadDarkModePreference();
+    carregarPerguntas();
     document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
 };
 

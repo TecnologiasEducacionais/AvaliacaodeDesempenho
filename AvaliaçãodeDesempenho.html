@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de Desempenho</title>
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- CSS Original Mantido -->
+    <style>
+        /* O CSS original permanece aqui, como foi solicitado */
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #f5f5f5;
+            color: #202124;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 80px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .form-header-image {
+            width: calc(100% + 60px);
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .yellow-bar {
+            background-color: #f5c200;
+            height: 12px;
+            width: calc(100% + 60px);
+            margin: 0 auto;
+            transform: translateX(-30px);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .form-container {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+        header {
+            background-color: #004070;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+        header img {
+            max-height: 40px;
+        }
+        h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #004070;
+        }
+        .submit-button {
+            background-color: #004070;
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #ea5a33;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+    </header>
+
+    <div class="form-container">
+        <h1>Avaliação de Desempenho</h1>
+        <form id="form-avaliacao">
+            <!-- Perguntas serão inseridas aqui dinamicamente -->
+        </form>
+        <button class="submit-button" onclick="calcularPontuacao()">Calcular Pontuação</button>
+        <div id="resultado"></div>
+    </div>
+</div>
+
+<script>
+// Perguntas e pesos para Administrativo
+const perguntasAdministrativo = [
+    { pergunta: "O colaborador busca aprimorar seu conhecimento em sua área de atuação.", peso: 3 },
+    { pergunta: "O colaborador demonstra criatividade na solução de problemas.", peso: 2 }
+    // Adicione mais perguntas conforme necessário
+];
+
+// Perguntas e pesos para Docentes
+const perguntasDocentes = [
+    { pergunta: "O professor busca aprimorar seu conhecimento em sua área de atuação.", peso: 3 },
+    { pergunta: "O professor utiliza abordagens inovadoras para o aprendizado.", peso: 2 }
+    // Adicione mais perguntas conforme necessário
+];
+
+// Função para carregar perguntas com base no perfil escolhido
+function carregarFormulario(perfil) {
+    const form = document.getElementById('form-avaliacao');
+    let perguntas = perfil === 'administrativo' ? perguntasAdministrativo : perguntasDocentes;
+
+    perguntas.forEach((item, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('question');
+        questionDiv.innerHTML = `
+            <label>${item.pergunta} (Peso: ${item.peso})</label>
+            <input type="radio" name="pergunta${index}" value="1"> Discordo totalmente
+            <input type="radio" name="pergunta${index}" value="2"> Discordo
+            <input type="radio" name="pergunta${index}" value="3"> Neutro
+            <input type="radio" name="pergunta${index}" value="4"> Concordo
+            <input type="radio" name="pergunta${index}" value="5"> Concordo totalmente
+        `;
+        form.appendChild(questionDiv);
+    });
+}
+
+// Função para calcular a pontuação
+function calcularPontuacao() {
+    let totalPontos = 0;
+
+    // Função para calcular a pontuação com base nas respostas
+    const form = document.getElementById('form-avaliacao');
+    const perguntas = form.querySelectorAll('.question');
+    perguntas.forEach((pergunta, index) => {
+        const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
+        if (resposta) {
+            const peso = parseInt(resposta.value) * (            const peso = parseInt(resposta.value) * (perfil === 'administrativo' ? perguntasAdministrativo[index].peso : perguntasDocentes[index].peso);
+            totalPontos += peso;
+        }
+    });
+
+    // Exibir o resultado com base na pontuação total
+    let resultado = document.getElementById('resultado');
+    if (totalPontos >= 120) {
+        resultado.textContent = `Pontuação: ${totalPontos} - Excelente`;
+    } else if (totalPontos >= 90) {
+        resultado.textContent = `Pontuação: ${totalPontos} - Bom`;
+    } else if (totalPontos >= 60) {
+        resultado.textContent = `Pontuação: ${totalPontos} - Regular`;
+    } else {
+        resultado.textContent = `Pontuação: ${totalPontos} - Insatisfatório`;
+    }
+}
+
+// Capturar o perfil da URL
+const params = new URLSearchParams(window.location.search);
+const perfil = params.get('perfil');
+
+// Carregar o formulário correto com base no perfil
+if (perfil) {
+    carregarFormulario(perfil);
+} else {
+    document.getElementById('form-avaliacao').innerHTML = "<p>Perfil não selecionado. Por favor, volte e escolha seu perfil.</p>";
+}
+</script>
+
+</body>
+</html>
+

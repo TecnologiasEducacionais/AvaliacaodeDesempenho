@@ -227,14 +227,15 @@ function calcularPontuacao() {
     });
 
     // Pontuação final calculada, mas não exibida ao usuário
-    console.log(`Pontuação final: ${totalPontos}`);
+    console.log(`Pontuação final: ${totalPontos}`); 
 }
 
 // Capturar o perfil da URL (docente ou administrativo)
 const params = new URLSearchParams(window.location.search);
 const perfil = params.get('perfil');
 
-if (perfil) {    carregarPerguntas(perfil);
+if (perfil) {
+    carregarPerguntas(perfil);
 } else {
     document.getElementById('form-avaliacao').innerHTML = "<p>Perfil não selecionado. Por favor, volte e escolha seu perfil.</p>";
 }
@@ -264,4 +265,3 @@ window.onload = function() {
 </script>
 </body>
 </html>
-

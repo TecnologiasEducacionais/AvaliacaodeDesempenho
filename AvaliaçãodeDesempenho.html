@@ -18,69 +18,65 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100px;
+            min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        /* Contêiner do formulário */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
             max-width: 700px;
-            margin-top: 80px;
+            margin-top: 100px;
             padding: 0 20px;
             box-sizing: border-box;
         }
-        .form-container {
-            width: 100%;
-            background-color: white;
+
+        /* Cartões das perguntas */
+        .card {
+            background-color: #fff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 50px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s ease;
         }
-        header {
-            background-color: #004070;
-            color: #fff;
+
+        /* Título da pergunta */
+        .question {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Escala de respostas */
+        .scale {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
             width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            box-sizing: border-box;
+            margin-top: 10px;
         }
-        header img {
-            max-height: 40px;
+
+        .scale label {
+            font-size: 14px;
+            color: #666;
         }
-        h1 {
-            font-size: 24px;
-            color: #004070;
-            text-align: center;
-        }
-        .question {
-            margin-bottom: 20px;
-        }
-        .question label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .options {
+
+        .scale .options {
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             gap: 10px;
         }
-        .options input[type="radio"] {
-            margin-right: 5px;
+
+        .scale .options label {
+            display: inline-block;
+            text-align: center;
         }
-        .options label {
-            display: flex;
-            align-items: center;
-        }
+
+        /* Botão de envio */
         .submit-button {
             background-color: #004070;
             color: white;
@@ -89,25 +85,90 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-bottom: 20px;
         }
+
         .submit-button:hover {
             background-color: #ea5a33;
         }
+
+        /* Formatação do cabeçalho com imagem */
+        .form-header-image {
+            width: calc(100% + 60px);
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .yellow-bar {
+            background-color: #f5c200;
+            height: 12px;
+            width: calc(100% + 60px);
+            margin: 0 auto;
+            transform: translateX(-30px);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        /* Botão de alternância de modo escuro */
+        .toggle-dark-mode {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        /* Modo escuro */
+        body.dark-mode {
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+
+        body.dark-mode .card {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .submit-button {
+            background-color: #f5c200;
+            color: black;
+        }
+
+        body.dark-mode .submit-button:hover {
+            background-color: #ea5a33;
+            color: white;
+        }
+
+        .dark-mode header {
+            background-color: #121212;
+        }
+
+        .dark-mode .form-header-image {
+            border: 1px solid #444;
+        }
+
     </style>
 </head>
 <body>
+
 <div class="container">
     <header>
         <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+        <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
     </header>
+
+    <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" 
+         alt="Cabeçalho do Formulário" class="form-header-image">
+    <div class="yellow-bar"></div> <!-- Barra amarela -->
 
     <div class="form-container">
         <h1>Avaliação de Desempenho</h1>
         <form id="form-avaliacao">
             <!-- Perguntas serão inseridas aqui dinamicamente -->
         </form>
-        <button class="submit-button" onclick="calcularPontuacao()">Calcular Pontuação</button>
-        <div id="resultado"></div>
+        <button class="submit-button" onclick="calcularPontuacao()">Enviar Avaliação</button>
     </div>
 </div>
 
@@ -122,19 +183,23 @@ async function carregarPerguntas(perfil) {
 
         const form = document.getElementById('form-avaliacao');
         perguntas.forEach((item, index) => {
-            const questionDiv = document.createElement('div');
-            questionDiv.classList.add('question');
-            questionDiv.innerHTML = `
-                <label>${item.pergunta} (Peso: ${item.peso})</label>
-                <div class="options">
-                    <label><input type="radio" name="pergunta${index}" value="1"> Discordo totalmente</label>
-                    <label><input type="radio" name="pergunta${index}" value="2"> Discordo</label>
-                    <label><input type="radio" name="pergunta${index}" value="3"> Neutro</label>
-                    <label><input type="radio" name="pergunta${index}" value="4"> Concordo</label>
-                    <label><input type="radio" name="pergunta${index}" value="5"> Concordo totalmente</label>
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+            cardDiv.innerHTML = `
+                <div class="question">${item.pergunta}</div>
+                <div class="scale">
+                    <label>Discordo totalmente</label>
+                    <div class="options">
+                        <label><input type="radio" name="pergunta${index}" value="1"> 1</label>
+                        <label><input type="radio" name="pergunta${index}" value="2"> 2</label>
+                        <label><input type="radio" name="pergunta${index}" value="3"> 3</label>
+                        <label><input type="radio" name="pergunta${index}" value="4"> 4</label>
+                        <label><input type="radio" name="pergunta${index}" value="5"> 5</label>
+                    </div>
+                    <label>Concordo totalmente</label>
                 </div>
             `;
-            form.appendChild(questionDiv);
+            form.appendChild(cardDiv);
         });
     } catch (error) {
         console.error("Erro ao carregar perguntas: ", error);
@@ -142,41 +207,55 @@ async function carregarPerguntas(perfil) {
     }
 }
 
-// Função para calcular a pontuação
+// Função para calcular a pontuação (pontuação não exibida ao usuário)
 function calcularPontuacao() {
     let totalPontos = 0;
     const form = document.getElementById('form-avaliacao');
-    const perguntas = form.querySelectorAll('.question');
+    const perguntas = form.querySelectorAll('.card');
     perguntas.forEach((pergunta, index) => {
         const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
         if (resposta) {
-            const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
+            const peso = parseInt(resposta.value) * 3; // Multiplicação oculta pelo peso (fixo em 3 para exemplo)
             totalPontos += peso;
         }
     });
 
-    let resultado = document.getElementById('resultado');
-    if (totalPontos >= 120) {
-        resultado.textContent = `Pontuação: ${totalPontos} - Excelente`;
-    } else if (totalPontos >= 90) {
-        resultado.textContent = `Pontuação: ${totalPontos} - Bom`;
-    } else if (totalPontos >= 60) {
-        resultado.textContent = `Pontuação: ${totalPontos} - Regular`;
-    } else {
-        resultado.textContent = `Pontuação: ${totalPontos} - Insatisfatório`;
-    }
+    // Pontuação final calculada, mas não exibida ao usuário
+    console.log(`Pontuação final: ${totalPontos}`);
 }
 
 // Capturar o perfil da URL (docente ou administrativo)
 const params = new URLSearchParams(window.location.search);
 const perfil = params.get('perfil');
 
-if (perfil) {
-    carregarPerguntas(perfil);
+if (perfil) {    carregarPerguntas(perfil);
 } else {
     document.getElementById('form-avaliacao').innerHTML = "<p>Perfil não selecionado. Por favor, volte e escolha seu perfil.</p>";
 }
-</script>
 
+// Função para alternar entre modo claro e escuro
+function toggleMode() {
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+    document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+}
+
+// Carregar preferências de modo escuro
+function loadDarkModePreference() {
+    const darkModePreference = localStorage.getItem('darkMode');
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').textContent = '☀️';
+    }
+}
+
+// Executar ao carregar a página
+window.onload = function() {
+    loadDarkModePreference();
+    document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
+};
+
+</script>
 </body>
 </html>
+

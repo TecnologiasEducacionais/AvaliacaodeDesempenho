@@ -63,6 +63,7 @@
         /* Imagem de cabeçalho */
         .form-header-image {
             width: 100%;
+            max-width: 800px; /* Ajuste para a largura do formulário */
             margin-bottom: 20px;
             border-radius: 8px;
             object-fit: cover;
@@ -75,17 +76,17 @@
             background-color: #f5c200;
             height: 12px;
             width: 100%;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            margin-bottom: -20px;
+            max-width: 800px; /* Ajuste para a largura do contêiner */
+            margin-bottom: -12px;
         }
 
         /* Formulário */
         .form-container {
             width: 100%;
+            max-width: 800px;
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-radius: 0 0 8px 8px;
+            border-radius: 8px;
             padding: 30px;
             margin-bottom: 50px;
         }
@@ -138,30 +139,49 @@
         }
 
         .options input[type="radio"] {
-            margin-top: 5px;
-            appearance: none;
-            border: 1px solid #ccc;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            outline: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: none; /* Esconde o input real */
         }
 
-        .options input[type="radio"]:checked {
-            background-color: #004070;
-            transform: scale(1.2);
-        }
-
-        .options input[type="radio"]::before {
+        /* Estilo do círculo do Google Forms */
+        .options input[type="radio"] + label::before {
             content: '';
-            display: block;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #202124;
+            border-radius: 50%;
+            transition: border-color 0.3s ease;
+        }
+
+        .options input[type="radio"]:checked + label::before {
+            border-color: #4285f4;
+            animation: ping 0.4s ease-in-out;
+        }
+
+        /* Ponto azul no centro */
+        .options input[type="radio"]:checked + label::after {
+            content: '';
+            position: absolute;
             width: 10px;
             height: 10px;
-            margin: 4px;
-            background-color: white;
+            background-color: #4285f4;
             border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Animação ping */
+        @keyframes ping {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.4);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Modo escuro */
@@ -224,11 +244,11 @@ async function carregarPerguntas(perfil) {
                 <div class="scale">
                     <span>Discordo totalmente</span>
                     <div class="options">
-                        <label><span>1</span><input type="radio" name="pergunta${index}" value="1"></label>
-                        <label><span>2</span><input type="radio" name="pergunta${index}" value="2"></label>
-                        <label><span>3</span><input type="radio" name="pergunta${index}" value="3"></label>
-                        <label><span>4</span><input type="radio" name="pergunta${index}" value="4"></label>
-                        <label><span>5</span><input type="radio" name="pergunta${index}" value="5"></label>
+                        <input type="radio" id="pergunta${index}_1" name="pergunta${index}" value="1"><label for="pergunta${index}_1">1</label>
+                        <input type="radio" id="pergunta${index}_2" name="pergunta${index}" value="2"><label for="pergunta${index}_2">2</label>
+                        <input type="radio" id="pergunta${index}_3" name="pergunta${index}" value="3"><label for="pergunta${index}_3">3</label>
+                        <input type="radio" id="pergunta${index}_4" name="pergunta${index}" value="4"><label for="pergunta${index}_4">4</label>
+                        <input type="radio" id="pergunta${index}_5" name="pergunta${index}" value="5"><label for="pergunta${index}_5">5</label>
                     </div>
                     <span>Concordo totalmente</span>
                 </div>
@@ -239,21 +259,6 @@ async function carregarPerguntas(perfil) {
         console.error("Erro ao carregar perguntas: ", error);
         document.getElementById('form-avaliacao').innerHTML = "<p>Erro ao carregar as perguntas. Tente novamente mais tarde.</p>";
     }
-}
-
-// Função para calcular a pontuação (pontuação não exibida ao usuário)
-function calcularPontuacao() {
-    let totalPontos = 0;
-    const form = document.getElementById('form-avaliacao');
-    const perguntas = form.querySelectorAll('.form-question-card');
-    perguntas.forEach((pergunta, index) => {
-        const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
-        if (resposta) {
-            const peso = parseInt(resposta.value) * 3;
-            totalPontos += peso;
-        }
-    });
-    console.log(`Pontuação final: ${totalPontos}`);
 }
 
 // Capturar o perfil da URL (docente ou administrativo)

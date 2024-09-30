@@ -27,9 +27,9 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 800px; /* Define a largura máxima para o container */
-            margin-top: 80px; /* Mantém a margem superior */
-            padding: 0 20px; /* Adiciona espaçamento lateral */
+            max-width: 800px;
+            margin-top: 80px;
+            padding: 0 20px;
             box-sizing: border-box;
         }
 
@@ -57,17 +57,17 @@
         .toggle-dark-mode {
             font-size: 24px;
             cursor: pointer;
-            margin-left: auto; /* Ajusta o ícone de modo noturno à direita */
+            margin-left: auto;
         }
 
         /* Imagem de cabeçalho */
         .form-header-image {
-            width: calc(100% + 60px); /* Expande a largura da imagem */
-            margin-bottom: 20px; /* Espaçamento entre a imagem e o formulário */
-            border-radius: 8px; /* Arredonda as bordas da imagem */
-            object-fit: cover; /* Ajusta a imagem para caber corretamente */
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
-            border: 1px solid #e0e0e0; /* Borda leve */
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
         }
 
         /* Barra amarela */
@@ -75,19 +75,17 @@
             background-color: #f5c200;
             height: 12px;
             width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
-            transform: translateY(-20px); /* Move um pouco a barra para cima */
+            margin-bottom: -20px;
         }
 
         /* Formulário */
         .form-container {
-            width: 100%; /* O formulário ocupa 100% da largura do container */
+            width: 100%;
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-radius: 0 0 8px 8px; /* Arredonda apenas os cantos inferiores */
+            border-radius: 0 0 8px 8px;
             padding: 30px;
             margin-bottom: 50px;
         }
@@ -113,14 +111,57 @@
             color: #004070;
         }
 
-        .form-question-options {
+        /* Escala linear estilo Google Forms */
+        .scale {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 15px;
+            position: relative;
         }
 
-        .form-question-options input[type="radio"] {
-            margin: 0 10px;
+        .scale label {
+            font-size: 14px;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .options label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 5px;
+        }
+
+        .options input[type="radio"] {
+            margin-top: 5px;
+            appearance: none;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .options input[type="radio"]:checked {
+            background-color: #004070;
+            transform: scale(1.2);
+        }
+
+        .options input[type="radio"]::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            margin: 4px;
+            background-color: white;
+            border-radius: 50%;
         }
 
         /* Modo escuro */
@@ -177,19 +218,19 @@ async function carregarPerguntas(perfil) {
         const form = document.getElementById('form-avaliacao');
         perguntas.forEach((item, index) => {
             const cardDiv = document.createElement('div');
-            cardDiv.classList.add('card');
+            cardDiv.classList.add('form-question-card');
             cardDiv.innerHTML = `
-                <div class="question">${item.pergunta}</div>
+                <label class="form-question-label">${item.pergunta}</label>
                 <div class="scale">
-                    <label>Discordo totalmente</label>
+                    <span>Discordo totalmente</span>
                     <div class="options">
-                        <label><input type="radio" name="pergunta${index}" value="1"> 1</label>
-                        <label><input type="radio" name="pergunta${index}" value="2"> 2</label>
-                        <label><input type="radio" name="pergunta${index}" value="3"> 3</label>
-                        <label><input type="radio" name="pergunta${index}" value="4"> 4</label>
-                        <label><input type="radio" name="pergunta${index}" value="5"> 5</label>
+                        <label><span>1</span><input type="radio" name="pergunta${index}" value="1"></label>
+                        <label><span>2</span><input type="radio" name="pergunta${index}" value="2"></label>
+                        <label><span>3</span><input type="radio" name="pergunta${index}" value="3"></label>
+                        <label><span>4</span><input type="radio" name="pergunta${index}" value="4"></label>
+                        <label><span>5</span><input type="radio" name="pergunta${index}" value="5"></label>
                     </div>
-                    <label>Concordo totalmente</label>
+                    <span>Concordo totalmente</span>
                 </div>
             `;
             form.appendChild(cardDiv);
@@ -204,16 +245,14 @@ async function carregarPerguntas(perfil) {
 function calcularPontuacao() {
     let totalPontos = 0;
     const form = document.getElementById('form-avaliacao');
-    const perguntas = form.querySelectorAll('.card');
+    const perguntas = form.querySelectorAll('.form-question-card');
     perguntas.forEach((pergunta, index) => {
         const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
         if (resposta) {
-            const peso = parseInt(resposta.value) * 3; // Multiplicação oculta pelo peso (fixo em 3 para exemplo)
+            const peso = parseInt(resposta.value) * 3;
             totalPontos += peso;
         }
     });
-
-    // Pontuação final calculada, mas não exibida ao usuário
     console.log(`Pontuação final: ${totalPontos}`);
 }
 
@@ -252,4 +291,3 @@ window.onload = function() {
 </script>
 </body>
 </html>
-

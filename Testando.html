@@ -1,54 +1,133 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação de Desempenho - Escolha seu Perfil</title>
-    <style>
-        /* CSS para centralizar as opções */
-        body {
-            font-family: 'Ubuntu', sans-serif;
-            background-color: #f5f5f5;
-            color: #202124;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escolha seu perfil</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+    
+    body {
+      font-family: 'Ubuntu', sans-serif;
+      background-color: #f5f5f5;
+      color: #202124;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
 
-        .container {
-            text-align: center;
-        }
+    .header {
+      background-color: #004070;
+      color: white;
+      padding: 10px 20px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
 
-        h1 {
-            font-size: 24px;
-            color: #004070;
-        }
+    .header img {
+      max-height: 40px;
+    }
 
-        .option-button {
-            background-color: #004070;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 10px;
-            font-size: 16px;
-        }
+    .toggle-dark-mode {
+      font-size: 24px;
+      cursor: pointer;
+    }
 
-        .option-button:hover {
-            background-color: #ea5a33;
-        }
+    h1 {
+      margin-bottom: 50px;
+      color: #004070;
+    }
 
-    </style>
+    .btn {
+      background-color: #004070;
+      color: white;
+      padding: 20px 40px;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      margin: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #003358;
+    }
+
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+
+    body.dark-mode .btn {
+      background-color: #f5c200;
+      color: black;
+    }
+
+    body.dark-mode .btn:hover {
+      background-color: #d6a200;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Avaliação de Desempenho</h1>
-        <p>Escolha seu perfil para continuar:</p>
-        <button class="option-button" onclick="location.href='Avalia%C3%A7%C3%A3odeDesempenho.html?perfil=administrativo'">Sou Administrativo</button>
-        <button class="option-button" onclick="location.href='Avalia%C3%A7%C3%A3odeDesempenho.html?perfil=docente'">Sou Docente</button>
-    </div>
+
+  <!-- Cabeçalho com logotipo e modo noturno -->
+  <div class="header">
+    <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+    <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
+  </div>
+
+  <!-- Container principal -->
+  <div class="container">
+    <h1>Escolha seu perfil:</h1>
+    <button class="btn" onclick="loadForm('administrativo')">Sou Administrativo</button>
+    <button class="btn" onclick="loadForm('docente')">Sou Docente</button>
+  </div>
+
+  <div id="formContainer"></div>
+
+  <script>
+    // Função para carregar o formulário baseado na escolha
+    function loadForm(role) {
+      google.script.run.withSuccessHandler(function(html) {
+        document.getElementById("formContainer").innerHTML = html;
+      }).getFormHtml(role);
+    }
+
+    // Alternância de modo noturno
+    const toggleDarkMode = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    function toggleMode() {
+      const isDarkMode = body.classList.toggle('dark-mode');
+      toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    }
+
+    toggleDarkMode.addEventListener('click', toggleMode);
+
+    window.onload = function() {
+      const darkModePreference = localStorage.getItem('darkMode');
+      if (darkModePreference === 'enabled') {
+        body.classList.add('dark-mode');
+        toggleDarkMode.textContent = '☀️';
+      }
+    };
+  </script>
 </body>
 </html>

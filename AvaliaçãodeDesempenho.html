@@ -230,41 +230,59 @@
         <div class="form-container">
             <h1 style="font-size: 18px;">Avaliação de Desempenho</h1>
 
-            <!-- Perguntas do formulário inseridas aqui dinamicamente -->
-            <div id="form-avaliacao"></div>
+            <form id="avaliacaoForm">
+                <!-- Pergunta 1 -->
+                <div class="form-question-card">
+                    <label class="form-question-label">O colaborador busca aprimorar seus conhecimentos?</label>
+                    <div class="scale">
+                        <span>Discordo totalmente</span>
+                        <div class="options">
+                            <input type="radio" id="pergunta1_1" name="pergunta1" value="1"><label for="pergunta1_1">1</label>
+                            <input type="radio" id="pergunta1_2" name="pergunta1" value="2"><label for="pergunta1_2">2</label>
+                            <input type="radio" id="pergunta1_3" name="pergunta1" value="3"><label for="pergunta1_3">3</label>
+                            <input type="radio" id="pergunta1_4" name="pergunta1" value="4"><label for="pergunta1_4">4</label>
+                            <input type="radio" id="pergunta1_5" name="pergunta1" value="5"><label for="pergunta1_5">5</label>
+                        </div>
+                        <span>Concordo totalmente</span>
+                    </div>
+                </div>
+
+                <!-- Pergunta 2 -->
+                <div class="form-question-card">
+                    <label class="form-question-label">O colaborador demonstra criatividade nas soluções?</label>
+                    <div class="scale">
+                        <span>Discordo totalmente</span>
+                        <div class="options">
+                            <input type="radio" id="pergunta2_1" name="pergunta2" value="1"><label for="pergunta2_1">1</label>
+                            <input type="radio" id="pergunta2_2" name="pergunta2" value="2"><label for="pergunta2_2">2</label>
+                            <input type="radio" id="pergunta2_3" name="pergunta2" value="3"><label for="pergunta2_3">3</label>
+                            <input type="radio" id="pergunta2_4" name="pergunta2" value="4"><label for="pergunta2_4">4</label>
+                            <input type="radio" id="pergunta2_5" name="pergunta2" value="5"><label for="pergunta2_5">5</label>
+                        </div>
+                        <span>Concordo totalmente</span>
+                    </div>
+                </div>
+
+                <!-- Nome Completo -->
+                <div class="form-question-card">
+                    <label class="form-question-label" for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
+                </div>
+
+                <!-- Matrícula -->
+                <div class="form-question-card">
+                    <label class="form-question-label" for="matricula">Matrícula</label>
+                    <input type="text" id="matricula" name="matricula" required placeholder="Digite sua matrícula">
+                </div>
+
+                <!-- Botão de Envio -->
+                <button type="submit" class="submit-button">Enviar Avaliação</button>
+            </form>
+
         </div>
     </div>
 
 <script>
-// Função para carregar as perguntas
-async function carregarPerguntas() {
-    const perguntas = [
-        "O colaborador busca aprimorar seus conhecimentos?",
-        "O colaborador demonstra criatividade nas soluções?"
-    ];
-
-    const form = document.getElementById('form-avaliacao');
-    perguntas.forEach((item, index) => {
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('form-question-card');
-        cardDiv.innerHTML = `
-            <label class="form-question-label">${item}</label>
-            <div class="scale">
-                <span>Discordo totalmente</span>
-                <div class="options">
-                    <input type="radio" id="pergunta${index}_1" name="pergunta${index}" value="1"><label for="pergunta${index}_1">1</label>
-                    <input type="radio" id="pergunta${index}_2" name="pergunta${index}" value="2"><label for="pergunta${index}_2">2</label>
-                    <input type="radio" id="pergunta${index}_3" name="pergunta${index}" value="3"><label for="pergunta${index}_3">3</label>
-                    <input type="radio" id="pergunta${index}_4" name="pergunta${index}" value="4"><label for="pergunta${index}_4">4</label>
-                    <input type="radio" id="pergunta${index}_5" name="pergunta${index}" value="5"><label for="pergunta${index}_5">5</label>
-                </div>
-                <span>Concordo totalmente</span>
-            </div>
-        `;
-        form.appendChild(cardDiv);
-    });
-}
-
 // Função para alternar entre modo claro e escuro
 function toggleMode() {
     const isDarkMode = document.body.classList.toggle('dark-mode');
@@ -281,10 +299,27 @@ function loadDarkModePreference() {
     }
 }
 
+// Função para enviar o formulário
+document.getElementById('avaliacaoForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Previne o envio padrão do formulário
+
+    const nome = document.getElementById('nome').value;
+    const matricula = document.getElementById('matricula').value;
+
+    Swal.fire({
+        title: 'Avaliação Enviada!',
+        text: `Obrigado pela sua avaliação, ${nome}.`,
+        icon: 'success',
+        confirmButtonText: 'Fechar'
+    });
+
+    // Reseta o formulário
+    document.getElementById('avaliacaoForm').reset();
+});
+
 // Executar ao carregar a página
 window.onload = function() {
     loadDarkModePreference();
-    carregarPerguntas();
     document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
 };
 

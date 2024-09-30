@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avaliação de Desempenho</title>
-    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
         body {
@@ -112,7 +112,7 @@
 <script>
 // Função para carregar as perguntas do JSON
 async function carregarPerguntas(perfil) {
-     try {
+    try {
         // Escolher o arquivo JSON baseado no perfil selecionado
         const arquivoJson = perfil === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
         
@@ -151,7 +151,7 @@ function calcularPontuacao() {
     perguntas.forEach((pergunta, index) => {
         const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
         if (resposta) {
-            const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
+                        const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
             totalPontos += peso;
         }
     });
@@ -183,4 +183,4 @@ if (perfil) {
 
 </body>
 </html>
-    
+

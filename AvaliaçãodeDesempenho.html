@@ -31,29 +31,11 @@
             padding: 0 20px;
             box-sizing: border-box;
         }
-        .form-header-image {
-            width: calc(100% + 60px);
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
-        .yellow-bar {
-            background-color: #f5c200;
-            height: 12px;
-            width: calc(100% + 60px);
-            margin: 0 auto;
-            transform: translateX(-30px);
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
         .form-container {
             width: 100%;
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-radius: 0 0 8px 8px;
+            border-radius: 8px;
             padding: 30px;
             margin-bottom: 50px;
         }
@@ -74,10 +56,30 @@
         header img {
             max-height: 40px;
         }
-        h3 {
-            margin-top: 0;
-            font-size: 18px;
+        h1 {
+            font-size: 24px;
             color: #004070;
+            text-align: center;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .options input[type="radio"] {
+            margin-right: 5px;
+        }
+        .options label {
+            display: flex;
+            align-items: center;
         }
         .submit-button {
             background-color: #004070;
@@ -113,26 +115,24 @@
 // Função para carregar as perguntas do JSON
 async function carregarPerguntas(perfil) {
     try {
-        // Escolher o arquivo JSON baseado no perfil selecionado
         const arquivoJson = perfil === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
-        
-        // Carregar o arquivo JSON
         const response = await fetch(arquivoJson);
-        const data = await response.json(); // Converter para objeto JS
+        const data = await response.json();
         const perguntas = perfil === 'administrativo' ? data.administrativo : data.docente;
 
-        // Preencher o formulário com as perguntas
         const form = document.getElementById('form-avaliacao');
         perguntas.forEach((item, index) => {
             const questionDiv = document.createElement('div');
             questionDiv.classList.add('question');
             questionDiv.innerHTML = `
                 <label>${item.pergunta} (Peso: ${item.peso})</label>
-                <input type="radio" name="pergunta${index}" value="1"> Discordo totalmente
-                <input type="radio" name="pergunta${index}" value="2"> Discordo
-                <input type="radio" name="pergunta${index}" value="3"> Neutro
-                <input type="radio" name="pergunta${index}" value="4"> Concordo
-                <input type="radio" name="pergunta${index}" value="5"> Concordo totalmente
+                <div class="options">
+                    <label><input type="radio" name="pergunta${index}" value="1"> Discordo totalmente</label>
+                    <label><input type="radio" name="pergunta${index}" value="2"> Discordo</label>
+                    <label><input type="radio" name="pergunta${index}" value="3"> Neutro</label>
+                    <label><input type="radio" name="pergunta${index}" value="4"> Concordo</label>
+                    <label><input type="radio" name="pergunta${index}" value="5"> Concordo totalmente</label>
+                </div>
             `;
             form.appendChild(questionDiv);
         });
@@ -145,18 +145,16 @@ async function carregarPerguntas(perfil) {
 // Função para calcular a pontuação
 function calcularPontuacao() {
     let totalPontos = 0;
-
     const form = document.getElementById('form-avaliacao');
     const perguntas = form.querySelectorAll('.question');
     perguntas.forEach((pergunta, index) => {
         const resposta = pergunta.querySelector(`input[name="pergunta${index}"]:checked`);
         if (resposta) {
-                        const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
+            const peso = parseInt(resposta.value) * parseInt(pergunta.querySelector('label').textContent.match(/\d+/)[0]);
             totalPontos += peso;
         }
     });
 
-    // Exibir o resultado com base na pontuação total
     let resultado = document.getElementById('resultado');
     if (totalPontos >= 120) {
         resultado.textContent = `Pontuação: ${totalPontos} - Excelente`;
@@ -173,7 +171,6 @@ function calcularPontuacao() {
 const params = new URLSearchParams(window.location.search);
 const perfil = params.get('perfil');
 
-// Carregar o formulário correto com base no perfil
 if (perfil) {
     carregarPerguntas(perfil);
 } else {
@@ -183,4 +180,3 @@ if (perfil) {
 
 </body>
 </html>
-

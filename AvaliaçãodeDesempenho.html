@@ -181,7 +181,28 @@
             }
         }
 
-        function carregarPerguntas() {
+        // Função para carregar o JSON correto com base no perfil
+        function carregarJsonDinamicamente() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const perfil = urlParams.get('perfil');
+            let jsonFile;
+
+            if (perfil === 'docente') {
+                jsonFile = 'docente.json'; // Insira o caminho correto para o JSON de docentes
+            } else if (perfil === 'administrativo') {
+                jsonFile = 'administrativo.json'; // Insira o caminho correto para o JSON de administrativos
+            } else {
+                return; // Nenhum perfil válido
+            }
+
+            fetch(jsonFile)
+                .then(response => response.json())
+                .then(data => carregarPerguntas(data.perguntas))
+                .catch(error => console.error('Erro ao carregar JSON:', error));
+        }
+
+        // Função para exibir as perguntas
+        function carregarPerguntas(perguntas) {
             const formContainer = document.getElementById('form-avaliacao');
             perguntas.forEach((perguntaObj, index) => {
                 const card = document.createElement('div');
@@ -219,8 +240,9 @@
         window.onload = function() {
             loadDarkModePreference();
             document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
-            carregarPerguntas();
+            carregarJsonDinamicamente(); // Carrega o JSON de perguntas com base no perfil
         };
     </script>
 </body>
 </html>
+

@@ -181,22 +181,28 @@
             }
         }
 
-        // Função para carregar o JSON correto com base no perfil
+               // Função para carregar o JSON correto com base no perfil a partir do URL
         function carregarJsonDinamicamente() {
             const urlParams = new URLSearchParams(window.location.search);
             const perfil = urlParams.get('perfil');
             let jsonFile;
 
             if (perfil === 'docente') {
-                jsonFile = 'docente.json'; // Insira o caminho correto para o JSON de docentes
+                jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/docente.json'; // URL correta para JSON de docentes
             } else if (perfil === 'administrativo') {
-                jsonFile = 'administrativo.json'; // Insira o caminho correto para o JSON de administrativos
+                jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/administrativo.json'; // URL correta para JSON de administrativos
             } else {
+                console.error('Perfil não reconhecido!');
                 return; // Nenhum perfil válido
             }
 
             fetch(jsonFile)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar JSON');
+                    }
+                    return response.json();
+                })
                 .then(data => carregarPerguntas(data.perguntas))
                 .catch(error => console.error('Erro ao carregar JSON:', error));
         }
@@ -204,6 +210,8 @@
         // Função para exibir as perguntas
         function carregarPerguntas(perguntas) {
             const formContainer = document.getElementById('form-avaliacao');
+            formContainer.innerHTML = ''; // Limpa o formulário antes de carregar
+
             perguntas.forEach((perguntaObj, index) => {
                 const card = document.createElement('div');
                 card.className = 'form-question-card';
@@ -225,8 +233,8 @@
                     const span = document.createElement('span');
                     span.textContent = valor;
 
-                    opcoes.appendChild(span);
                     opcoes.appendChild(radio);
+                    opcoes.appendChild(span);
                 });
 
                 card.appendChild(perguntaLabel);
@@ -240,9 +248,10 @@
         window.onload = function() {
             loadDarkModePreference();
             document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
-            carregarJsonDinamicamente(); // Carrega o JSON de perguntas com base no perfil
+            carregarJsonDinamicamente(); // Chama o JSON de acordo com o perfil selecionado
         };
     </script>
 </body>
 </html>
+
 

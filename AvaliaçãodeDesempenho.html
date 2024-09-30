@@ -1,199 +1,263 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulário Administrativo</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
-    
-    body {
-      font-family: 'Ubuntu', sans-serif;
-      background-color: #f5f5f5;
-      color: #202124;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de Desempenho - Administrativo</title>
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #f5f5f5;
+            color: #202124;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 80px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .form-header-image {
+            width: calc(100% + 60px);
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .yellow-bar {
+            background-color: #f5c200;
+            height: 12px;
+            width: calc(100% + 60px);
+            margin: 0 auto;
+            transform: translateX(-30px);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .form-container {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+        header {
+            background-color: #004070;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+        header img {
+            max-height: 40px;
+        }
+        .toggle-dark-mode {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        body:not(.dark-mode) .form-container {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        body.dark-mode .form-container {
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            background-color: #333;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #004070;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 700px;
-      margin-top: 80px;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
+        /* Estilos para centralizar e organizar a escala de avaliação */
+        .rating-scale {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
 
-    .header {
-      background-color: #004070;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-      box-sizing: border-box;
-    }
+        .rating-scale span {
+            margin: 0 15px;
+            font-size: 14px;
+            color: #202124;
+        }
 
-    .header img {
-      max-height: 40px;
-    }
+        .rating-scale label {
+            display: inline-block;
+            margin: 0 8px;
+        }
 
-    .toggle-dark-mode {
-      font-size: 24px;
-      cursor: pointer;
-    }
+        .rating-scale input[type="radio"] {
+            margin: 0 5px;
+        }
 
-    .form-header-image {
-      width: calc(100% + 60px);
-      height: auto;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      object-fit: cover;
-      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-      border: 1px solid #e0e0e0;
-    }
+        .rating-scale label span {
+            font-size: 14px;
+            color: #202124;
+        }
 
-    .yellow-bar {
-      background-color: #f5c200;
-      height: 12px;
-      width: calc(100% + 60px);
-      margin: 0 auto;
-      transform: translateX(-30px);
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
-    }
+        .submit-button {
+            background-color: #004070;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-    .form-container {
-      background-color: white;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      border-radius: 0 0 8px 8px;
-      padding: 30px;
-      margin-bottom: 50px;
-    }
+        .submit-button:hover {
+            background-color: #003358;
+        }
 
-    .form-section {
-      margin-bottom: 25px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #e0e0e0;
-    }
+        /* Estilo para o botão de limpar seleção */
+        .clear-selection {
+            color: #5f6368;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
 
-    h3 {
-      font-size: 18px;
-      color: #004070;
-    }
-
-    label {
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
-
-    input[type="radio"] {
-      margin: 10px 0;
-    }
-
-    button {
-      background-color: #ea5a33;
-      color: white;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #0f96ae;
-      color: white;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    body.dark-mode {
-      background-color: #1e1e1e;
-      color: #ffffff;
-    }
-
-    body.dark-mode .form-container {
-      background-color: #333;
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
-    }
-  </style>
+        .clear-selection:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <!-- Cabeçalho com logotipo e modo noturno -->
-  <div class="header">
-    <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
-    <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
-  </div>
+    <div class="container">
+        <header>
+            <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+            <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
+        </header>
 
-  <div class="container">
-    <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" alt="Cabeçalho do Formulário" class="form-header-image">
-    <div class="yellow-bar"></div>
+        <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" 
+             alt="Cabeçalho do Formulário" 
+             class="form-header-image">
 
-    <div class="form-container">
-      <h3>Formulário Administrativo</h3>
-      <form id="administrativoForm" onsubmit="submitForm(event)">
-        <!-- Pergunta exemplo -->
-        <div class="form-section">
-          <label>O colaborador busca aprimorar constantemente seu conhecimento?</label>
-          <input type="radio" name="pergunta1" value="1"> Discordo totalmente<br>
-          <input type="radio" name="pergunta1" value="2"> Discordo<br>
-          <input type="radio" name="pergunta1" value="3"> Neutro<br>
-          <input type="radio" name="pergunta1" value="4"> Concordo<br>
-          <input type="radio" name="pergunta1" value="5"> Concordo totalmente<br>
+        <div class="yellow-bar"></div> <!-- Barra amarela -->
+
+        <div class="form-container">
+            <h1>Avaliação de Desempenho - Administrativo</h1>
+            <form id="evaluationForm">
+                <!-- Pergunta 1 -->
+                <div class="question">
+                    <label for="q1">O colaborador busca constantemente aprimorar seus conhecimentos em sua área de atuação?</label>
+                    <div class="rating-scale">
+                        <span>Discordo totalmente</span>
+                        <label for="q1-1"><input type="radio" id="q1-1" name="q1" value="1"><span>1</span></label>
+                        <label for="q1-2"><input type="radio" id="q1-2" name="q1" value="2"><span>2</span></label>
+                        <label for="q1-3"><input type="radio" id="q1-3" name="q1" value="3"><span>3</span></label>
+                        <label for="q1-4"><input type="radio" id="q1-4" name="q1" value="4"><span>4</span></label>
+                        <label for="q1-5"><input type="radio" id="q1-5" name="q1" value="5"><span>5</span></label>
+                        <span>Concordo totalmente</span>
+                    </div>
+                    <span class="clear-selection" onclick="clearSelection('q1')">Limpar seleção</span>
+                </div>
+
+                <!-- Pergunta 2 -->
+                <div class="question">
+                    <label for="q2">O colaborador demonstra criatividade ao buscar soluções para os problemas?</label>
+                    <div class="rating-scale">
+                        <span>Discordo totalmente</span>
+                        <label for="q2-1"><input type="radio" id="q2-1" name="q2" value="1"><span>1</span></label>
+                        <label for="q2-2"><input type="radio" id="q2-2" name="q2" value="2"><span>2</span></label>
+                        <label for="q2-3"><input type="radio" id="q2-3" name="q2" value="3"><span>3</span></label>
+                        <label for="q2-4"><input type="radio" id="q2-4" name="q2" value="4"><span>4</span></label>
+                        <label for="q2-5"><input type="radio" id="q2-5" name="q2" value="5"><span>5</span></label>
+                        <span>Concordo totalmente</span>
+                    </div>
+                    <span class="clear-selection" onclick="clearSelection('q2')">Limpar seleção</span>
+                </div>
+
+                <!-- Botão de envio -->
+                <button type="submit" class="submit-button">Enviar Avaliação</button>
+            </form>
         </div>
-        <!-- Adicione mais perguntas -->
-
-        <button type="submit">Enviar</button>
-      </form>
     </div>
-  </div>
 
-  <script>
-    function submitForm(event) {
-      event.preventDefault();
-      const form = document.getElementById('administrativoForm');
-      const formData = {
-        pergunta1: form.querySelector('input[name="pergunta1"]:checked').value,
-        // Adicione mais perguntas conforme necessário
-      };
+    <script>
+        document.getElementById('evaluationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let totalScore = 0;
 
-      google.script.run.withSuccessHandler(function() {
-        alert('Formulário enviado com sucesso!');
-        form.reset();
-      }).submitData(formData);
-    }
+            const q1 = parseInt(document.querySelector('input[name="q1"]:checked')?.value || 0);
+            const q2 = parseInt(document.querySelector('input[name="q2"]:checked')?.value || 0);
 
-    const toggleDarkMode = document.getElementById('darkModeToggle');
-    const body = document.body;
+            totalScore = q1 * 3 + q2 * 2; // Peso das questões com base nos dados fornecidos
 
-    function toggleMode() {
-      const isDarkMode = body.classList.toggle('dark-mode');
-      toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
-      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-    }
+            // Exemplo de cálculo de pontuação total
+            let evaluationResult = '';
+            if (totalScore >= 120) {
+                evaluationResult = 'Excelente';
+            } else if (totalScore >= 90) {
+                evaluationResult = 'Bom';
+            } else if (totalScore >= 60) {
+                evaluationResult = 'Regular';
+            } else {
+                evaluationResult = 'Insatisfatório';
+            }
 
-    toggleDarkMode.addEventListener('click', toggleMode);
+            // Exibe a pontuação total e o resultado da avaliação
+            Swal.fire({
+                title: 'Resultado da Avaliação',
+                text: `Pontuação total: ${totalScore}\nResultado: ${evaluationResult}`,
+                icon: 'success'
+            });
+        });
 
-    window.onload = function() {
-      const darkModePreference = localStorage.getItem('darkMode');
-      if (darkModePreference === 'enabled') {
-        body.classList.add('dark-mode');
-        toggleDarkMode.textContent = '☀️';
-      }
-    };
-  </script>
+        // Função para limpar a seleção de uma pergunta
+        function clearSelection(questionName) {
+            const radios = document.querySelectorAll(`input[name="${questionName}"]`);
+            radios.forEach(radio => radio.checked = false);
+        }
+
+        // Modo noturno
+        const toggleDarkMode = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        function toggleMode() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salvar no localStorage
+        }
+
+        function loadDarkModePreference() {
+            const darkModePreference = localStorage.getItem('darkMode');
+            if (darkModePreference === 'enabled') {
+                body.classList.add('dark-mode');
+                toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
+            }
+        }
+
+        window.onload = function() {
+            loadDarkModePreference();
+            toggleDarkMode.addEventListener('click', toggleMode);  // Ativar a alternância de modo escuro
+        };
+    </script>
 </body>
 </html>

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avaliação de Desempenho</title>
-    <link rel="icon" href="https://i.imgur.com/z7B218w.png" type="image/png">
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
         body {
@@ -18,106 +18,109 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh;
+            min-height: 100px;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Contêiner do formulário */
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 700px;
-            margin-top: 100px;
-            padding: 0 20px;
+            max-width: 800px; /* Define a largura máxima para o container */
+            margin-top: 80px; /* Mantém a margem superior */
+            padding: 0 20px; /* Adiciona espaçamento lateral */
             box-sizing: border-box;
         }
 
-        /* Cartões das perguntas */
-        .card {
-            background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Título da pergunta */
-        .question {
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        /* Escala de respostas */
-        .scale {
+        /* Barra superior */
+        header {
+            background-color: #004070;
+            color: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px 20px;
             width: 100%;
-            margin-top: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
         }
 
-        .scale label {
-            font-size: 14px;
-            color: #666;
+        header img {
+            max-height: 40px;
+            margin-right: 20px;
         }
 
-        .scale .options {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .scale .options label {
-            display: inline-block;
-            text-align: center;
-        }
-
-        /* Botão de envio */
-        .submit-button {
-            background-color: #004070;
-            color: white;
-            padding: 12px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .submit-button:hover {
-            background-color: #ea5a33;
-        }
-
-        /* Formatação do cabeçalho com imagem */
-        .form-header-image {
-            width: calc(100% + 60px);
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e0e0e0;
-        }
-
-        .yellow-bar {
-            background-color: #f5c200;
-            height: 12px;
-            width: calc(100% + 60px);
-            margin: 0 auto;
-            transform: translateX(-30px);
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-
-        /* Botão de alternância de modo escuro */
         .toggle-dark-mode {
             font-size: 24px;
             cursor: pointer;
-            margin-right: 20px;
+            margin-left: auto; /* Ajusta o ícone de modo noturno à direita */
+        }
+
+        /* Imagem de cabeçalho */
+        .form-header-image {
+            width: calc(100% + 60px); /* Expande a largura da imagem */
+            margin-bottom: 20px; /* Espaçamento entre a imagem e o formulário */
+            border-radius: 8px; /* Arredonda as bordas da imagem */
+            object-fit: cover; /* Ajusta a imagem para caber corretamente */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra leve */
+            border: 1px solid #e0e0e0; /* Borda leve */
+        }
+
+        /* Barra amarela */
+        .yellow-bar {
+            background-color: #f5c200;
+            height: 12px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            transform: translateY(-20px); /* Move um pouco a barra para cima */
+        }
+
+        /* Formulário */
+        .form-container {
+            width: 100%; /* O formulário ocupa 100% da largura do container */
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px; /* Arredonda apenas os cantos inferiores */
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Perguntas em cartões */
+        .form-question-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .form-question-card:hover {
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-question-label {
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: block;
+            color: #004070;
+        }
+
+        .form-question-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-question-options input[type="radio"] {
+            margin: 0 10px;
         }
 
         /* Modo escuro */
@@ -126,57 +129,41 @@
             color: #ffffff;
         }
 
-        body.dark-mode .card {
+        body.dark-mode .form-container {
             background-color: #333;
-            color: white;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
         }
 
-        body.dark-mode .submit-button {
-            background-color: #f5c200;
-            color: black;
-        }
-
-        body.dark-mode .submit-button:hover {
-            background-color: #ea5a33;
-            color: white;
-        }
-
-        .dark-mode header {
-            background-color: #121212;
-        }
-
-        .dark-mode .form-header-image {
-            border: 1px solid #444;
-        }
-
-        /* Estilizando a imagem do logotipo */
-        header img {
-            max-height: 60px; /* Definindo uma altura máxima para o logotipo */
-            width: auto; /* Mantendo a proporção da largura */
+        .dark-mode .form-question-card {
+            background-color: #444;
+            color: #fff;
         }
 
     </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Barra superior com logotipo e modo escuro -->
+        <header>
+            <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+            <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
+        </header>
 
-<div class="container">
-    <header>
-        <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
-        <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
-    </header>
+        <!-- Cabeçalho com imagem -->
+        <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" alt="Cabeçalho do Formulário" class="form-header-image">
 
-    <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" 
-         alt="Cabeçalho do Formulário" class="form-header-image">
-    <div class="yellow-bar"></div> <!-- Barra amarela -->
+        <!-- Barra amarela -->
+        <div class="yellow-bar"></div>
 
-    <div class="form-container">
-        <h1>Avaliação de Desempenho</h1>
-        <form id="form-avaliacao">
-            <!-- Perguntas serão inseridas aqui dinamicamente -->
-        </form>
-        <button class="submit-button" onclick="calcularPontuacao()">Enviar Avaliação</button>
+        <!-- Conteúdo do formulário -->
+        <div class="form-container">
+            <h1>Avaliação de Desempenho</h1>
+            <!-- Perguntas do formulário inseridas aqui dinamicamente -->
+            <div id="form-avaliacao"></div>
+        </div>
     </div>
-</div>
+
 
 <script>
 // Função para carregar as perguntas do JSON

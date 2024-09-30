@@ -165,92 +165,125 @@
     </div>
 
     <script>
-        // Função para alternar entre modo claro e escuro
-        function toggleMode() {
-            const isDarkMode = document.body.classList.toggle('dark-mode');
-            document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-        }
+// Função para alternar entre modo escuro e claro
+function toggleMode() {
+    const body = document.body;
+    const isDarkMode = body.classList.toggle('dark-mode');
+    document.getElementById('darkModeToggle').textContent = isDarkMode ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+}
 
-        // Carregar preferências de modo escuro
-        function loadDarkModePreference() {
-            const darkModePreference = localStorage.getItem('darkMode');
-            if (darkModePreference === 'enabled') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('darkModeToggle').textContent = '☀️';
+// Carregar a preferência de modo escuro/claro do usuário
+function loadDarkModePreference() {
+    const darkModePreference = localStorage.getItem('darkMode');
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').textContent = '☀️';
+    } else {
+        document.getElementById('darkModeToggle').textContent = '🌙';
+    }
+}
+
+// Função para carregar o JSON correto com base no perfil a partir do URL
+function carregarJsonDinamicamente() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const perfil = urlParams.get('perfil');
+    let jsonFile;
+
+    if (perfil === 'docente') {
+        jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/docente.json'; // URL para JSON de docentes
+    } else if (perfil === 'administrativo') {
+        jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/administrativo.json'; // URL para JSON de administrativos
+    } else {
+        console.error('Perfil não reconhecido!');
+        return;
+    }
+
+    fetch(jsonFile)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao carregar JSON');
             }
-        }
+            return response.json();
+        })
+        .then(data => carregarPerguntas(data.perguntas))
+        .catch(error => console.error('Erro ao carregar JSON:', error));
+}
 
-               // Função para carregar o JSON correto com base no perfil a partir do URL
-        function carregarJsonDinamicamente() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const perfil = urlParams.get('perfil');
-            let jsonFile;
+// Função para exibir as perguntas
+function carregarPerguntas(perguntas) {
+    const formContainer = document.getElementById('form-avaliacao');
+    formContainer.innerHTML = ''; // Limpa o formulário antes de carregar
 
-            if (perfil === 'docente') {
-                jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/docente.json'; // URL correta para JSON de docentes
-            } else if (perfil === 'administrativo') {
-                jsonFile = 'https://tecnologiaseducacionais.github.io/AvaliacaodeDesempenho/administrativo.json'; // URL correta para JSON de administrativos
-            } else {
-                console.error('Perfil não reconhecido!');
-                return; // Nenhum perfil válido
-            }
+    perguntas.forEach((perguntaObj, index) => {
+        const card = document.createElement('div');
+        card.className = 'form-question-card';
 
-            fetch(jsonFile)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao carregar JSON');
-                    }
-                    return response.json();
-                })
-                .then(data => carregarPerguntas(data.perguntas))
-                .catch(error => console.error('Erro ao carregar JSON:', error));
-        }
+        const perguntaLabel = document.createElement('label');
+        perguntaLabel.className = 'form-question-label';
+        perguntaLabel.textContent = perguntaObj.pergunta;
 
-        // Função para exibir as perguntas
-        function carregarPerguntas(perguntas) {
-            const formContainer = document.getElementById('form-avaliacao');
-            formContainer.innerHTML = ''; // Limpa o formulário antes de carregar
+        const opcoes = document.createElement('div');
+        opcoes.className = 'form-question-options';
 
-            perguntas.forEach((perguntaObj, index) => {
-                const card = document.createElement('div');
-                card.className = 'form-question-card';
+        const escala = ['1', '2', '3', '4', '5'];
+        escala.forEach(valor => {
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `pergunta_${index}`;
+            radio.value = valor;
 
-                const perguntaLabel = document.createElement('label');
-                perguntaLabel.className = 'form-question-label';
-                perguntaLabel.textContent = perguntaObj.pergunta;
+            const span = document.createElement('span');
+            span.textContent = valor;
 
-                const opcoes = document.createElement('div');
-                opcoes.className = 'form-question-options';
+            opcoes.appendChild(radio);
+            opcoes.appendChild(span);
+        });
 
-                const escala = ['1', '2', '3', '4', '5'];
-                escala.forEach(valor => {
-                    const radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = `pergunta_${index}`;
-                    radio.value = valor;
+        const opcaoInicio = document.createElement('span');
+        opcaoInicio.className = 'opcao-inicio';
+        opcaoInicio.textContent = 'Discordo totalmente';
 
-                    const span = document.createElement('span');
-                    span.textContent = valor;
+        const opcaoFim = document.createElement('span');
+        opcaoFim.className = 'opcao-fim';
+        opcaoFim.textContent = 'Concordo totalmente';
 
-                    opcoes.appendChild(radio);
-                    opcoes.appendChild(span);
-                });
+        card.appendChild(perguntaLabel);
+        card.appendChild(opcaoInicio);
+        card.appendChild(opcoes);
+        card.appendChild(opcaoFim);
 
-                card.appendChild(perguntaLabel);
-                card.appendChild(opcoes);
+        formContainer.appendChild(card);
+    });
+}
 
-                formContainer.appendChild(card);
-            });
-        }
+// Função para calcular a pontuação com base nas respostas
+function calcularPontuacao() {
+    const radios = document.querySelectorAll('input[type="radio"]:checked');
+    let totalPontuacao = 0;
 
-        // Executar ao carregar a página
-        window.onload = function() {
-            loadDarkModePreference();
-            document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
-            carregarJsonDinamicamente(); // Chama o JSON de acordo com o perfil selecionado
-        };
-    </script>
+    radios.forEach(radio => {
+        totalPontuacao += parseInt(radio.value);
+    });
+
+    return totalPontuacao;
+}
+
+// Função para processar o envio do formulário (apenas exemplo)
+function enviarFormulario(event) {
+    event.preventDefault(); // Impede o comportamento padrão do formulário
+    const pontuacao = calcularPontuacao();
+    console.log('Pontuação total: ', pontuacao);
+}
+
+// Executar ao carregar a página
+window.onload = function() {
+    loadDarkModePreference();
+    document.getElementById('darkModeToggle').addEventListener('click', toggleMode);
+    carregarJsonDinamicamente(); // Chama o JSON de acordo com o perfil selecionado
+};
+
+</script>
 </body>
 </html>
 

@@ -1,0 +1,52 @@
+{
+  "administrativo": [
+    {
+      "pergunta": "O colaborador busca constantemente aprimorar seu conhecimento em sua área de atuação e sobre o negócio da UNISUAM.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador demonstra criatividade ao buscar soluções diferentes e inovadoras para os desafios enfrentados.",
+      "peso": 2
+    },
+    {
+      "pergunta": "O colaborador é proativo e conclui suas tarefas com eficiência e rapidez, do início ao fim.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador é empático e demonstra compreensão das necessidades de seus colegas e pares.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador promove e incentiva a colaboração entre sua equipe e outros departamentos.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador oferece feedback sincero e construtivo de maneira positiva e respeitosa.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador demonstra uma atitude de dono em sua área, buscando crescimento e inovação contínuos.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador analisa regularmente os resultados da sua área e propõe melhorias com base em dados.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador promove a excelência e alta performance em suas atividades, visando sempre resultados melhores.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador aplica o conceito de transformação no seu trabalho diário, promovendo mudanças positivas.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador demonstra alinhamento com a crença de que a educação transforma vidas, e isso se reflete em sua atuação.",
+      "peso": 3
+    },
+    {
+      "pergunta": "O colaborador contribui ativamente para transformar as relações e processos da UNISUAM.",
+      "peso": 2
+    }
+  ]
+}

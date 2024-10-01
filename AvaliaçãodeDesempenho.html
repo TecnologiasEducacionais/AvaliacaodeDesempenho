@@ -204,20 +204,20 @@ function loadQuestions() {
 
     console.log("Carregando arquivo JSON:", jsonFile);
 
-    fetch(jsonFile)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erro ao carregar o arquivo JSON: ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Perguntas carregadas com sucesso:", data);
-            displayQuestions(data);
-        })
-        .catch(error => {
-            console.error('Erro ao carregar as perguntas:', error);
-        });
+    let userType = localStorage.getItem("userType"); // Obtém o tipo de usuário salvo
+
+let jsonFile = userType === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
+
+fetch(jsonFile)
+    .then(response => response.json())
+    .then(data => {
+        // Função para carregar as perguntas
+        populateForm(data);
+    })
+    .catch(error => console.error("Erro ao carregar o arquivo JSON: ", error));
+
+function populateForm(data) {
+    // Lógica para preencher as perguntas no formulário
 }
 
 // Função para exibir as perguntas no formulário

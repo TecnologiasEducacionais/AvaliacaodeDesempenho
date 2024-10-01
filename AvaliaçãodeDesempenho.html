@@ -182,20 +182,17 @@
     <script>
 // Função para redirecionar com base no tipo de usuário selecionado
 function redirectToForm(userType) {
-    // Salva o tipo de usuário no localStorage
     localStorage.setItem('userType', userType);
-
-    // Redireciona para a página do formulário
     window.location.href = "formulario.html";
 }
 
 // Função que será chamada na página do formulário para carregar as perguntas
 function loadQuestions() {
-    const userType = localStorage.getItem('userType'); // Obtém o tipo de usuário (administrativo ou docente)
+    const userType = localStorage.getItem('userType');
     
     if (!userType) {
         console.error('Tipo de usuário não definido.');
-        return; // Se não houver tipo de usuário, não tenta carregar as perguntas
+        return;
     }
 
     let jsonFile;
@@ -205,14 +202,17 @@ function loadQuestions() {
         jsonFile = 'https://raw.githubusercontent.com/TecnologiasEducacionais/AvaliacaodeDesempenho/main/perguntas_docente.json';
     }
 
+    console.log("Carregando arquivo JSON:", jsonFile);
+
     fetch(jsonFile)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erro ao carregar o arquivo JSON');
+                throw new Error(`Erro ao carregar o arquivo JSON: ${response.statusText}`);
             }
             return response.json();
         })
         .then(data => {
+            console.log("Perguntas carregadas com sucesso:", data);
             displayQuestions(data);
         })
         .catch(error => {
@@ -271,6 +271,7 @@ window.onload = function() {
     }
 };
 </script>
+
 
 </body>
 </html>

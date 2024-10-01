@@ -139,6 +139,11 @@
         .clear-selection:hover {
             text-decoration: underline;
         }
+
+        /* Inicialmente escondemos todas as perguntas */
+        .question-set {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -157,7 +162,23 @@
         <div class="form-container">
             <h1 id="form-title">Avaliação de Desempenho</h1>
             <form id="evaluationForm">
-                <!-- O formulário será preenchido dinamicamente -->
+                <!-- Conjunto de perguntas para administrativos -->
+                <div id="administrativo-questions" class="question-set">
+                    <h2>Questões para Administrativos</h2>
+                    <p>1. O colaborador busca aprimorar constantemente seu conhecimento.</p>
+                    <p>2. O colaborador demonstra criatividade em buscar soluções inovadoras.</p>
+                    <!-- Continue listando as perguntas aqui -->
+                </div>
+
+                <!-- Conjunto de perguntas para docentes -->
+                <div id="docente-questions" class="question-set">
+                    <h2>Questões para Docentes</h2>
+                    <p>1. O professor busca aprimorar constantemente seus conhecimentos.</p>
+                    <p>2. O professor utiliza abordagens inovadoras em suas aulas.</p>
+                    <!-- Continue listando as perguntas aqui -->
+                </div>
+
+                <button type="submit" class="submit-button">Enviar Avaliação</button>
             </form>
         </div>
     </div>
@@ -182,107 +203,23 @@
             }
         }
 
-        // Perguntas de administrativos e docentes
-        const perguntas = {
-            "administrativo": [
-                {"pergunta": "O colaborador busca constantemente aprimorar seu conhecimento em sua área de atuação e sobre o negócio da UNISUAM.", "peso": 3},
-                {"pergunta": "O colaborador demonstra criatividade ao buscar soluções diferentes e inovadoras para os desafios enfrentados.", "peso": 2},
-                {"pergunta": "O colaborador é proativo e conclui suas tarefas com eficiência e rapidez, do início ao fim.", "peso": 3},
-                {"pergunta": "O colaborador é empático e demonstra compreensão das necessidades de seus colegas e pares.", "peso": 3},
-                {"pergunta": "O colaborador promove e incentiva a colaboração entre sua equipe e outros departamentos.", "peso": 3},
-                {"pergunta": "O colaborador oferece feedback sincero e construtivo de maneira positiva e respeitosa.", "peso": 3},
-                {"pergunta": "O colaborador demonstra uma atitude de dono em sua área, buscando crescimento e inovação contínuos.", "peso": 3},
-                {"pergunta": "O colaborador analisa regularmente os resultados da sua área e propõe melhorias com base em dados.", "peso": 3},
-                {"pergunta": "O colaborador promove a excelência e alta performance em suas atividades, visando sempre resultados melhores.", "peso": 3},
-                {"pergunta": "O colaborador aplica o conceito de transformação no seu trabalho diário, promovendo mudanças positivas.", "peso": 3},
-                {"pergunta": "O colaborador demonstra alinhamento com a crença de que a educação transforma vidas, e isso se reflete em sua atuação.", "peso": 3},
-                {"pergunta": "O colaborador contribui ativamente para transformar as relações e processos da UNISUAM.", "peso": 2}
-            ],
-            "docente": [
-                {"pergunta": "O professor busca constantemente aprimorar seus conhecimentos e atualizar-se nas metodologias de ensino.", "peso": 3},
-                {"pergunta": "O professor utiliza abordagens inovadoras para explicar conceitos e resolver problemas em sala de aula.", "peso": 2},
-                {"pergunta": "O professor promove a participação ativa dos alunos em sala, incentivando o debate e a troca de ideias.", "peso": 3},
-                {"pergunta": "O professor demonstra empatia e preocupação com o aprendizado e as necessidades dos alunos.", "peso": 3},
-                {"pergunta": "O professor promove a inclusão em sala de aula, respeitando as diferentes formas de aprendizado.", "peso": 3}, 
-                {"pergunta": "O professor oferece feedback construtivo aos alunos de forma clara e objetiva.", "peso": 3},
-                {"pergunta": "O professor busca integrar teoria e prática, relacionando o conteúdo ao cotidiano dos alunos.", "peso": 3},
-                {"pergunta": "O professor incentiva a pesquisa e a curiosidade intelectual dos alunos.", "peso": 3},
-                {"pergunta": "O professor demonstra pontualidade e comprometimento com as atividades acadêmicas.", "peso": 2},
-                {"pergunta": "O professor utiliza avaliações que consideram o desenvolvimento integral dos alunos.", "peso": 3},
-                {"pergunta": "O professor promove um ambiente de respeito mútuo e cooperação em sala de aula.", "peso": 3},
-                {"pergunta": "O professor estimula o aprendizado contínuo e o desenvolvimento de habilidades críticas nos alunos.", "peso": 3}
-            ]
-        };
-
-        // Função para carregar as perguntas com base no tipo de usuário
+        // Função para exibir o conjunto de perguntas correto
         function loadQuestions() {
-            const userType = localStorage.getItem('userType'); // Recupera o tipo de usuário do localStorage
-            
-            if (!userType) {
-                console.error('Tipo de usuário não definido.');
-                return;
-            }
-
-            const questions = perguntas[userType]; // Seleciona as perguntas corretas com base no tipo de usuário
-
-            if (questions) {
-                populateForm(questions); // Preenche o formulário com as perguntas
+            const userType = localStorage.getItem('userType');
+            if (userType === 'administrativo') {
+                document.getElementById('administrativo-questions').style.display = 'block';
+            } else if (userType === 'docente') {
+                document.getElementById('docente-questions').style.display = 'block';
             } else {
-                console.error('Nenhuma pergunta encontrada.');
+                console.error('Tipo de usuário não definido.');
             }
         }
 
-        // Função para exibir as perguntas no formulário
-        function populateForm(questions) {
-            const formContainer = document.getElementById('evaluationForm');
-            formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
-
-            questions.forEach((question, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.classList.add('question');
-
-                const label = document.createElement('label');
-                label.setAttribute('for', `q${index + 1}`);
-                label.textContent = question.pergunta;
-                questionDiv.appendChild(label);
-
-                const ratingScale = document.createElement('div');
-                ratingScale.classList.add('rating-scale');
-
-                const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
-                const disagreeText = document.createElement('span');
-                disagreeText.textContent = scaleText[0];
-                ratingScale.appendChild(disagreeText);
-
-                for (let i = 1; i <= 5; i++) {
-                    const label = document.createElement('label');
-                    const radio = document.createElement('input');
-                    radio.setAttribute('type', 'radio');
-                    radio.setAttribute('name', `q${index + 1}`);
-                    radio.setAttribute('value', i);
-                    radio.classList.add('form-radio');
-                    label.appendChild(radio);
-                    label.appendChild(document.createTextNode(i));
-                    ratingScale.appendChild(label);
-                }
-
-                const agreeText = document.createElement('span');
-                agreeText.textContent = scaleText[1];
-                ratingScale.appendChild(agreeText);
-
-                questionDiv.appendChild(ratingScale);
-                formContainer.appendChild(questionDiv);
-            });
-        }
-
-        // Função chamada ao carregar a página do formulário
+        // Função chamada ao carregar a página
         window.onload = function() {
-            loadDarkModePreference(); // Carrega a preferência do modo noturno
+                        loadDarkModePreference(); // Carrega a preferência do modo noturno
 
-            const isFormPage = window.location.pathname.includes('formulario'); // Verifica se é a página do formulário
-            if (isFormPage) {
-                loadQuestions(); // Carrega as perguntas
-            }
+            loadQuestions(); // Carrega as perguntas corretas com base no tipo de usuário
 
             // Adiciona o evento de alternância de modo noturno
             const toggleDarkMode = document.getElementById('darkModeToggle');
@@ -291,4 +228,3 @@
     </script>
 </body>
 </html>
-    

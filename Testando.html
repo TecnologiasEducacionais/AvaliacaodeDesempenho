@@ -1,133 +1,166 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escolha seu perfil</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
-    
-    body {
-      font-family: 'Ubuntu', sans-serif;
-      background-color: #f5f5f5;
-      color: #202124;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    
-    .container {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .header {
-      background-color: #004070;
-      color: white;
-      padding: 10px 20px;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 10;
-    }
-
-    .header img {
-      max-height: 40px;
-    }
-
-    .toggle-dark-mode {
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    h1 {
-      margin-bottom: 50px;
-      color: #004070;
-    }
-
-    .btn {
-      background-color: #004070;
-      color: white;
-      padding: 20px 40px;
-      border: none;
-      border-radius: 8px;
-      font-size: 20px;
-      cursor: pointer;
-      margin: 20px;
-      transition: background-color 0.3s ease;
-    }
-
-    .btn:hover {
-      background-color: #003358;
-    }
-
-    body.dark-mode {
-      background-color: #1e1e1e;
-      color: #ffffff;
-    }
-
-    body.dark-mode .btn {
-      background-color: #f5c200;
-      color: black;
-    }
-
-    body.dark-mode .btn:hover {
-      background-color: #d6a200;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação de Desempenho - Página Inicial</title>
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #f5f5f5;
+            color: #202124;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+            margin-top: 80px;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .form-header-image {
+            width: calc(100% + 60px);
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .yellow-bar {
+            background-color: #f5c200;
+            height: 12px;
+            width: calc(100% + 60px);
+            margin: 0 auto;
+            transform: translateX(-30px);
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .form-container {
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+        header {
+            background-color: #004070;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+        header img {
+            max-height: 40px;
+        }
+        .toggle-dark-mode {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        body:not(.dark-mode) .form-container {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        body.dark-mode .form-container {
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            background-color: #333;
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #004070;
+        }
+        .button {
+            background-color: #004070;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 20px;
+            width: 250px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #003358;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
+            <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
+        </header>
 
-  <!-- Cabeçalho com logotipo e modo noturno -->
-  <div class="header">
-    <img src="https://i.imgur.com/22pxWZ6.png" alt="Logotipo">
-    <span class="toggle-dark-mode" id="darkModeToggle">🌙</span>
-  </div>
+        <img src="https://lh6.googleusercontent.com/YbKkgJBCrhwrlGwZdYjFL84aGwa11Yvku9BcCmZ9eTothEMNjDuqhe1VoiVX9zcbaViOpTXLP4MmRjIauCbWu4EPxA57VmoeZhUXu4pAqWTJ7pcQH7bkD83wnBafwCXZlQ=w1580" 
+             alt="Cabeçalho do Formulário" 
+             class="form-header-image">
 
-  <!-- Container principal -->
-  <div class="container">
-    <h1>Escolha seu perfil:</h1>
-    <button class="btn" onclick="loadForm('AvaliaçãodeDesempenho.html')">Sou Administrativo</button>
-    <button class="btn" onclick="loadForm('docente')">Sou Docente</button>
-  </div>
+        <div class="yellow-bar"></div> <!-- Barra amarela -->
 
-  <div id="formContainer"></div>
+        <div class="form-container">
+            <h1>Avaliação de Desempenho</h1>
+            <p>Por favor, selecione seu perfil para continuar:</p>
+            <button class="button" onclick="redirectToForm('administrativo')">Sou Administrativo</button>
+            <button class="button" onclick="redirectToForm('docente')">Sou Docente</button>
+        </div>
+    </div>
 
-  <script>
-    // Função para carregar o formulário baseado na escolha
-    function loadForm(role) {
-      google.script.run.withSuccessHandler(function(html) {
-        document.getElementById("formContainer").innerHTML = html;
-      }).getFormHtml(role);
-    }
+    <script>
+        // Função para redirecionar com base no tipo de usuário selecionado
+        function redirectToForm(userType) {
+            if (userType === 'administrativo') {
+                window.location.href = "formulario_administrativo.html";
+            } else if (userType === 'docente') {
+                window.location.href = "formulario_docente.html";
+            }
+        }
 
-    // Alternância de modo noturno
-    const toggleDarkMode = document.getElementById('darkModeToggle');
-    const body = document.body;
+        // Modo noturno
+        const toggleDarkMode = document.getElementById('darkModeToggle');
+        const body = document.body;
 
-    function toggleMode() {
-      const isDarkMode = body.classList.toggle('dark-mode');
-      toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
-      localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-    }
+        function toggleMode() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salvar no localStorage
+        }
 
-    toggleDarkMode.addEventListener('click', toggleMode);
+        function loadDarkModePreference() {
+            const darkModePreference = localStorage.getItem('darkMode');
+            if (darkModePreference === 'enabled') {
+                body.classList.add('dark-mode');
+                toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
+            }
+        }
 
-    window.onload = function() {
-      const darkModePreference = localStorage.getItem('darkMode');
-      if (darkModePreference === 'enabled') {
-        body.classList.add('dark-mode');
-        toggleDarkMode.textContent = '☀️';
-      }
-    };
-  </script>
+        window.onload = function() {
+            loadDarkModePreference();
+            toggleDarkMode.addEventListener('click', toggleMode);  // Ativar a alternância de modo escuro
+        };
+    </script>
 </body>
 </html>

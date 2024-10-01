@@ -162,15 +162,22 @@
     </div>
 
     <script>
-        // Função que será chamada na página do formulário para carregar as perguntas
+       // Função para redirecionar com base no tipo de usuário selecionado
+function redirectToForm(userType) {
+    localStorage.setItem('userType', userType); // Armazena o tipo de usuário no localStorage
+    window.location.href = "formulario.html"; // Redireciona para o formulário
+}
+
+// Função que será chamada na página do formulário para carregar as perguntas
 function loadQuestions() {
-    const userType = localStorage.getItem('userType');
+    const userType = localStorage.getItem('userType'); // Recupera o tipo de usuário do localStorage
     
     if (!userType) {
         console.error('Tipo de usuário não definido.');
         return;
     }
 
+    // Determina o arquivo JSON a ser carregado com base no tipo de usuário
     let jsonFile;
     if (userType === 'administrativo') {
         jsonFile = 'perguntas_administrativo.json';
@@ -180,13 +187,19 @@ function loadQuestions() {
 
     console.log("Carregando arquivo JSON:", jsonFile);
 
+    // Faz a requisição para o arquivo JSON
     fetch(jsonFile)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao carregar o arquivo JSON');
+            }
+            return response.json();
+        })
         .then(data => {
-            // Ajuste para acessar o array de perguntas corretamente
-            const questions = data.administrativo || data.docente; // Certifique-se que acessa a chave correta
+            // Acessa as perguntas corretas dentro do JSON
+            const questions = data.administrativo || data.docente; 
             if (questions) {
-                populateForm(questions);
+                populateForm(questions); // Preenche o formulário com as perguntas
             } else {
                 console.error('Nenhuma pergunta encontrada no arquivo JSON.');
             }
@@ -237,13 +250,39 @@ function populateForm(questions) {
     });
 }
 
-// Chamar a função de carregar perguntas ao carregar a página do formulário
-window.onload = function() {
-    const isFormPage = window.location.pathname.includes('formulario');
-    if (isFormPage) {
-        loadQuestions();
+// Função para alternar o modo noturno
+function toggleMode() {
+    const body = document.body;
+    const isDarkMode = body.classList.toggle('dark-mode');
+    const toggleDarkMode = document.getElementById('darkModeToggle');
+    toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salva o modo no localStorage
+}
+
+// Função para carregar a preferência do modo noturno
+function loadDarkModePreference() {
+    const darkModePreference = localStorage.getItem('darkMode');
+    if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-mode');
+        const toggleDarkMode = document.getElementById('darkModeToggle');
+        toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
     }
+}
+
+// Função chamada ao carregar a página do formulário
+window.onload = function() {
+    loadDarkModePreference(); // Carrega a preferência do modo noturno
+
+    const isFormPage = window.location.pathname.includes('formulario'); // Verifica se é a página do formulário
+    if (isFormPage) {
+        loadQuestions(); // Carrega as perguntas
+    }
+
+    // Adiciona o evento de alternância de modo noturno
+    const toggleDarkMode = document.getElementById('darkModeToggle');
+    toggleDarkMode.addEventListener('click', toggleMode);
 };
+
 <script>
 </body>
 </html>

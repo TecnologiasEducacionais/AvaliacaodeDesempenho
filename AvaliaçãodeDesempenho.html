@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação de Desempenho - Administrativo</title>
-    <link rel="icon" href="https://i.imgur.com/z7B218w.png?v=2" type="image/png">
+    <title>Avaliação de Desempenho - Formulário</title>
+    <link rel="icon" href="https://i.imgur.com/z7B218w.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400&display=swap');
@@ -17,7 +17,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100px;
+            min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .container {
@@ -91,29 +91,24 @@
             color: #004070;
         }
 
-        /* Estilos para centralizar e organizar a escala de avaliação */
         .rating-scale {
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 20px 0;
         }
-
         .rating-scale span {
             margin: 0 15px;
             font-size: 14px;
             color: #202124;
         }
-
         .rating-scale label {
             display: inline-block;
             margin: 0 8px;
         }
-
         .rating-scale input[type="radio"] {
             margin: 0 5px;
         }
-
         .rating-scale label span {
             font-size: 14px;
             color: #202124;
@@ -135,7 +130,6 @@
             background-color: #003358;
         }
 
-        /* Estilo para o botão de limpar seleção */
         .clear-selection {
             color: #5f6368;
             font-size: 12px;
@@ -162,11 +156,11 @@
         <div class="yellow-bar"></div> <!-- Barra amarela -->
 
         <div class="form-container">
-            <h1>Avaliação de Desempenho - Administrativo</h1>
+            <h1 id="form-title">Avaliação de Desempenho</h1>
             <form id="evaluationForm">
                 <!-- Pergunta 1 -->
                 <div class="question">
-                    <label for="q1">O colaborador busca constantemente aprimorar seus conhecimentos em sua área de atuação?</label>
+                    <label id="q1-label" for="q1"></label>
                     <div class="rating-scale">
                         <span>Discordo totalmente</span>
                         <label for="q1-1"><input type="radio" id="q1-1" name="q1" value="1"><span>1</span></label>
@@ -179,21 +173,6 @@
                     <span class="clear-selection" onclick="clearSelection('q1')">Limpar seleção</span>
                 </div>
 
-                <!-- Pergunta 2 -->
-                <div class="question">
-                    <label for="q2">O colaborador demonstra criatividade ao buscar soluções para os problemas?</label>
-                    <div class="rating-scale">
-                        <span>Discordo totalmente</span>
-                        <label for="q2-1"><input type="radio" id="q2-1" name="q2" value="1"><span>1</span></label>
-                        <label for="q2-2"><input type="radio" id="q2-2" name="q2" value="2"><span>2</span></label>
-                        <label for="q2-3"><input type="radio" id="q2-3" name="q2" value="3"><span>3</span></label>
-                        <label for="q2-4"><input type="radio" id="q2-4" name="q2" value="4"><span>4</span></label>
-                        <label for="q2-5"><input type="radio" id="q2-5" name="q2" value="5"><span>5</span></label>
-                        <span>Concordo totalmente</span>
-                    </div>
-                    <span class="clear-selection" onclick="clearSelection('q2')">Limpar seleção</span>
-                </div>
-
                 <!-- Botão de envio -->
                 <button type="submit" class="submit-button">Enviar Avaliação</button>
             </form>
@@ -201,16 +180,34 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const userType = localStorage.getItem('userType'); // Obtém o tipo de usuário (administrativo ou docente)
+            const formTitle = document.getElementById('form-title');
+            const q1Label = document.getElementById('q1-label');
+            
+            // Define perguntas e textos com base no tipo de usuário
+            if (userType === 'administrativo') {
+                formTitle.innerText = "Avaliação de Desempenho - Administrativo";
+                q1Label.innerText = "O colaborador busca constantemente aprimorar seus conhecimentos em sua área de atuação?";
+                // Carregar arquivo JSON específico para administrativo
+                // Carregar e salvar o resultado no arquivo JSON de administrativo
+            } else if (userType === 'docente') {
+                formTitle.innerText = "Avaliação de Desempenho - Docente";
+                q1Label.innerText = "O professor busca constantemente aprimorar seus conhecimentos pedagógicos?";
+                // Carregar arquivo JSON específico para docente
+                // Carregar e salvar o resultado no arquivo JSON de docente
+            }
+        });
+
         document.getElementById('evaluationForm').addEventListener('submit', function(event) {
             event.preventDefault();
             let totalScore = 0;
 
             const q1 = parseInt(document.querySelector('input[name="q1"]:checked')?.value || 0);
-            const q2 = parseInt(document.querySelector('input[name="q2"]:checked')?.value || 0);
 
-            totalScore = q1 * 3 + q2 * 2; // Peso das questões com base nos dados fornecidos
+            totalScore = q1 * 3; // Exemplo de peso para a pergunta 1
 
-            // Exemplo de cálculo de pontuação total
+            // Cálculo da pontuação total e resultado
             let evaluationResult = '';
             if (totalScore >= 120) {
                 evaluationResult = 'Excelente';
@@ -222,12 +219,22 @@
                 evaluationResult = 'Insatisfatório';
             }
 
-            // Exibe a pontuação total e o resultado da avaliação
+            // Exibir o resultado final ao usuário usando SweetAlert
             Swal.fire({
                 title: 'Resultado da Avaliação',
                 text: `Pontuação total: ${totalScore}\nResultado: ${evaluationResult}`,
                 icon: 'success'
             });
+
+            // Salvar o resultado da avaliação no arquivo JSON apropriado
+            const userType = localStorage.getItem('userType');
+            const formData = {
+                userType: userType,
+                totalScore: totalScore,
+                evaluationResult: evaluationResult
+            };
+
+            saveEvaluationResult(formData);
         });
 
         // Função para limpar a seleção de uma pergunta
@@ -236,27 +243,43 @@
             radios.forEach(radio => radio.checked = false);
         }
 
-        // Modo noturno
+        // Função para salvar o resultado da avaliação no arquivo JSON correspondente
+        function saveEvaluationResult(formData) {
+            const userType = formData.userType;
+
+            // Simular envio de dados para um arquivo JSON com base no tipo de usuário
+            if (userType === 'administrativo') {
+                // Aqui, você faria a chamada de API ou salvaria os dados em um arquivo JSON para administrativos
+                console.log('Salvando dados para administrativo...', formData);
+                // Exemplo de salvamento em JSON ou servidor específico
+            } else if (userType === 'docente') {
+                // Aqui, você faria a chamada de API ou salvaria os dados em um arquivo JSON para docentes
+                console.log('Salvando dados para docente...', formData);
+                // Exemplo de salvamento em JSON ou servidor específico
+            }
+        }
+
+        // Alternância para o modo noturno
         const toggleDarkMode = document.getElementById('darkModeToggle');
         const body = document.body;
 
         function toggleMode() {
             const isDarkMode = body.classList.toggle('dark-mode');
             toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salvar no localStorage
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
         }
 
         function loadDarkModePreference() {
             const darkModePreference = localStorage.getItem('darkMode');
             if (darkModePreference === 'enabled') {
                 body.classList.add('dark-mode');
-                toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
+                toggleDarkMode.textContent = '☀️';
             }
         }
 
         window.onload = function() {
             loadDarkModePreference();
-            toggleDarkMode.addEventListener('click', toggleMode);  // Ativar a alternância de modo escuro
+            toggleDarkMode.addEventListener('click', toggleMode);
         };
     </script>
 </body>

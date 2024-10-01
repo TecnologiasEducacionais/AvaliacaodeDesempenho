@@ -130,13 +130,10 @@
     </div>
 
     <script>
-        // Função para redirecionar com base no tipo de usuário selecionado
+        // Função para redirecionar e salvar o tipo de usuário no localStorage
         function redirectToForm(userType) {
-            if (userType === 'administrativo') {
-                window.location.href = "formulario_administrativo.html";
-            } else if (userType === 'docente') {
-                window.location.href = "formulario_docente.html";
-            }
+            localStorage.setItem('userType', userType); // Armazenar o tipo de usuário
+            window.location.href = "formulario.html"; // Redirecionar para o formulário único
         }
 
         // Modo noturno

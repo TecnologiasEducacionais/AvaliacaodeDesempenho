@@ -204,24 +204,17 @@ function loadQuestions() {
 
     console.log("Carregando arquivo JSON:", jsonFile);
 
-    let userType = localStorage.getItem("userType"); // Obtém o tipo de usuário salvo
-
-let jsonFile = userType === 'administrativo' ? 'perguntas_administrativo.json' : 'perguntas_docente.json';
-
-fetch(jsonFile)
-    .then(response => response.json())
-    .then(data => {
-        // Função para carregar as perguntas
-        populateForm(data);
-    })
-    .catch(error => console.error("Erro ao carregar o arquivo JSON: ", error));
-
-function populateForm(data) {
-    // Lógica para preencher as perguntas no formulário
+    fetch(jsonFile)
+        .then(response => response.json())
+        .then(data => {
+            // Função para carregar as perguntas
+            populateForm(data);
+        })
+        .catch(error => console.error("Erro ao carregar o arquivo JSON: ", error));
 }
 
 // Função para exibir as perguntas no formulário
-function displayQuestions(questions) {
+function populateForm(questions) {
     const formContainer = document.getElementById('formContainer');
     formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
 
@@ -271,7 +264,5 @@ window.onload = function() {
     }
 };
 </script>
-
-
 </body>
 </html>

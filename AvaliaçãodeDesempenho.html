@@ -194,101 +194,100 @@
                 {"pergunta": "O colaborador demonstra uma atitude de dono em sua área, buscando crescimento e inovação contínuos.", "peso": 3},
                 {"pergunta": "O colaborador analisa regularmente os resultados da sua área e propõe melhorias com base em dados.", "peso": 3},
                 {"pergunta": "O colaborador promove a excelência e alta performance em suas atividades, visando sempre resultados melhores.", "peso": 3},
-                                {"pergunta": "O colaborador aplica o conceito de transformação no seu trabalho diário, promovendo mudanças positivas.", "peso": 3},
+                {"pergunta": "O colaborador aplica o conceito de transformação no seu trabalho diário, promovendo mudanças positivas.", "peso": 3},
                 {"pergunta": "O colaborador demonstra alinhamento com a crença de que a educação transforma vidas, e isso se reflete em sua atuação.", "peso": 3},
                 {"pergunta": "O colaborador contribui ativamente para transformar as relações e processos da UNISUAM.", "peso": 2}
-            ],
-            "docente": [
-                {"pergunta": "O professor busca constantemente aprimorar seus conhecimentos e atualizar-se nas metodologias de ensino.", "peso": 3},
-                {"pergunta": "O professor utiliza abordagens inovadoras para explicar conceitos e resolver problemas em sala de aula.", "peso": 2},
-                {"pergunta": "O professor promove a participação ativa dos alunos em sala, incentivando o debate e a troca de ideias.", "peso": 3},
-                {"pergunta": "O professor demonstra empatia e preocupação com o aprendizado e as necessidades dos alunos.", "peso": 3},
-                {"pergunta": "O professor promove a inclusão em sala de aula, respeitando as diferentes formas de aprendizado.", "peso": 3},
-                {"pergunta": "O professor oferece feedback construtivo aos alunos de forma clara e objetiva.", "peso": 3},
-                {"pergunta": "O professor busca integrar teoria e prática, relacionando o conteúdo ao cotidiano dos alunos.", "peso": 3},
-                {"pergunta": "O professor incentiva a pesquisa e a curiosidade intelectual dos alunos.", "peso": 3},
-                {"pergunta": "O professor demonstra pontualidade e comprometimento com as atividades acadêmicas.", "peso": 2},
-                {"pergunta": "O professor utiliza avaliações que consideram o desenvolvimento integral dos alunos.", "peso": 3},
-                {"pergunta": "O professor promove um ambiente de respeito mútuo e cooperação em sala de aula.", "peso": 3},
-                {"pergunta": "O professor estimula o aprendizado contínuo e o desenvolvimento de habilidades críticas nos alunos.", "peso": 3}
-            ]
-        };
+  ],
+"docente": [
+    {"pergunta": "O professor busca constantemente aprimorar seus conhecimentos e atualizar-se nas metodologias de ensino.", "peso": 3},
+    {"pergunta": "O professor utiliza abordagens inovadoras para explicar conceitos e resolver problemas em sala de aula.", "peso": 2},
+    {"pergunta": "O professor promove a participação ativa dos alunos em sala, incentivando o debate e a troca de ideias.", "peso": 3},
+    {"pergunta": "O professor demonstra empatia e preocupação com o aprendizado e as necessidades dos alunos.", "peso": 3},
+    {"pergunta": "O professor promove a inclusão em sala de aula, respeitando as diferentes formas de aprendizado.", "peso": 3},
+    {"pergunta": "O professor oferece feedback construtivo aos alunos de forma clara e objetiva.", "peso": 3},
+    {"pergunta": "O professor busca integrar teoria e prática, relacionando o conteúdo ao cotidiano dos alunos.", "peso": 3},
+    {"pergunta": "O professor incentiva a pesquisa e a curiosidade intelectual dos alunos.", "peso": 3},
+    {"pergunta": "O professor demonstra pontualidade e comprometimento com as atividades acadêmicas.", "peso": 2},
+    {"pergunta": "O professor utiliza avaliações que consideram o desenvolvimento integral dos alunos.", "peso": 3},
+    {"pergunta": "O professor promove um ambiente de respeito mútuo e cooperação em sala de aula.", "peso": 3},
+    {"pergunta": "O professor estimula o aprendizado contínuo e o desenvolvimento de habilidades críticas nos alunos.", "peso": 3}
+  ]
+};
 
-        // Função para carregar as perguntas com base no tipo de usuário
-        function loadQuestions() {
-            const userType = localStorage.getItem('userType'); // Recupera o tipo de usuário do localStorage
-            
-            if (!userType) {
-                console.error('Tipo de usuário não definido.');
-                return;
-            }
+// Função para carregar as perguntas com base no tipo de usuário
+function loadQuestions() {
+  const userType = localStorage.getItem('userType'); // Recupera o tipo de usuário do localStorage
 
-            const questions = perguntas[userType]; // Seleciona as perguntas corretas com base no tipo de usuário
+  if (!userType) {
+    console.error('Tipo de usuário não definido.');
+    return;
+  }
 
-            if (questions) {
-                populateForm(questions); // Preenche o formulário com as perguntas
-            } else {
-                console.error('Nenhuma pergunta encontrada.');
-            }
-        }
+  const questions = perguntas[userType]; // Seleciona as perguntas corretas com base no tipo de usuário
 
-        // Função para exibir as perguntas no formulário
-        function populateForm(questions) {
-            const formContainer = document.getElementById('evaluationForm');
-            formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
+  if (questions) {
+    populateForm(questions); // Preenche o formulário com as perguntas
+  } else {
+    console.error('Nenhuma pergunta encontrada.');
+  }
+}
 
-            questions.forEach((question, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.classList.add('question');
+// Função para exibir as perguntas no formulário
+function populateForm(questions) {
+  const formContainer = document.getElementById('evaluationForm');
+  formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
 
-                const label = document.createElement('label');
-                label.setAttribute('for', `q${index + 1}`);
-                label.textContent = question.pergunta;
-                questionDiv.appendChild(label);
+  questions.forEach((question, index) => {
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('question');
 
-                const ratingScale = document.createElement('div');
-                ratingScale.classList.add('rating-scale');
+    const label = document.createElement('label');
+    label.setAttribute('for', `q${index + 1}`);
+    label.textContent = question.pergunta;
+    questionDiv.appendChild(label);
 
-                const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
-                const disagreeText = document.createElement('span');
-                disagreeText.textContent = scaleText[0];
-                ratingScale.appendChild(disagreeText);
+    const ratingScale = document.createElement('div');
+    ratingScale.classList.add('rating-scale');
 
-                for (let i = 1; i <= 5; i++) {
-                    const label = document.createElement('label');
-                    const radio = document.createElement('input');
-                    radio.setAttribute('type', 'radio');
-                    radio.setAttribute('name', `q${index + 1}`);
-                    radio.setAttribute('value', i);
-                    radio.classList.add('form-radio');
-                    label.appendChild(radio);
-                    label.appendChild(document.createTextNode(i));
-                    ratingScale.appendChild(label);
-                }
+    const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
+    const disagreeText = document.createElement('span');
+    disagreeText.textContent = scaleText[0];
+    ratingScale.appendChild(disagreeText);
 
-                const agreeText = document.createElement('span');
-                agreeText.textContent = scaleText[1];
-                ratingScale.appendChild(agreeText);
+    for (let i = 1; i <= 5; i++) {
+      const label = document.createElement('label');
+      const radio = document.createElement('input');
+      radio.setAttribute('type', 'radio');
+      radio.setAttribute('name', `q${index + 1}`);
+      radio.setAttribute('value', i);
+      radio.classList.add('form-radio');
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(i));
+      ratingScale.appendChild(label);
+    }
 
-                questionDiv.appendChild(ratingScale);
-                formContainer.appendChild(questionDiv);
-            });
-        }
+    const agreeText = document.createElement('span');
+    agreeText.textContent = scaleText[1];
+    ratingScale.appendChild(agreeText);
 
-        // Função chamada ao carregar a página do formulário
-        window.onload = function() {
-            loadDarkModePreference(); // Carrega a preferência do modo noturno
+    questionDiv.appendChild(ratingScale);
+    formContainer.appendChild(questionDiv);
+  });
+}
 
-            const isFormPage = window.location.pathname.includes('AvaliaçãodeDesempenho.html'); // Verifica se é a página do formulário
-            if (isFormPage) {
-                loadQuestions(); // Carrega as perguntas
-            }
+// Função chamada ao carregar a página do formulário
+window.onload = function() {
+  loadDarkModePreference(); // Carrega a preferência do modo noturno
 
-            // Adiciona o evento de alternância de modo noturno
-            const toggleDarkMode = document.getElementById('darkModeToggle');
-            toggleDarkMode.addEventListener('click', toggleMode);
-        };
-    </script>
-</body>
-</html>
+  const isFormPage = window.location.pathname.includes('formulario'); // Verifica se é a página do formulário
+  if (isFormPage) {
+    loadQuestions(); // Carrega as perguntas
+  }
 
+  // Adiciona o evento de alternância de modo noturno
+  const toggleDarkMode = document.getElementById('darkModeToggle');
+  toggleDarkMode.addEventListener('click', toggleMode);
+};
+<script>
+  </head>
+<body>  

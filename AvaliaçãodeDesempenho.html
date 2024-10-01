@@ -155,114 +155,110 @@
 
         <div class="yellow-bar"></div> <!-- Barra amarela -->
 
-        <div class="form-container">
+        <div class="form-container" id="formContainer">
             <h1 id="form-title">Avaliação de Desempenho</h1>
-            <form id="evaluationForm">
-                <!-- Pergunta 1 -->
-                <div class="question">
-                    <label id="q1-label" for="q1"></label>
-                    <div class="rating-scale">
-                        <span>Discordo totalmente</span>
-                        <label for="q1-1"><input type="radio" id="q1-1" name="q1" value="1"><span>1</span></label>
-                        <label for="q1-2"><input type="radio" id="q1-2" name="q1" value="2"><span>2</span></label>
-                        <label for="q1-3"><input type="radio" id="q1-3" name="q1" value="3"><span>3</span></label>
-                        <label for="q1-4"><input type="radio" id="q1-4" name="q1" value="4"><span>4</span></label>
-                        <label for="q1-5"><input type="radio" id="q1-5" name="q1" value="5"><span>5</span></label>
-                        <span>Concordo totalmente</span>
-                    </div>
-                    <span class="clear-selection" onclick="clearSelection('q1')">Limpar seleção</span>
-                </div>
-
-                <!-- Botão de envio -->
-                <button type="submit" class="submit-button">Enviar Avaliação</button>
-            </form>
+            <!-- The questions will be populated here -->
         </div>
     </div>
 
     <script>
-// Função para redirecionar com base no tipo de usuário selecionado
-function redirectToForm(userType) {
-    localStorage.setItem('userType', userType);
-    window.location.href = "formulario.html";
-}
+        // Função que será chamada na página do formulário para carregar as perguntas
+        function loadQuestions() {
+            const userType = localStorage.getItem('userType');
+            
+            if (!userType) {
+                console.error('Tipo de usuário não definido.');
+                return;
+            }
 
-// Função que será chamada na página do formulário para carregar as perguntas
-function loadQuestions() {
-    const userType = localStorage.getItem('userType');
-    
-    if (!userType) {
-        console.error('Tipo de usuário não definido.');
-        return;
-    }
+            let jsonFile;
+            if (userType === 'administrativo') {
+                jsonFile = './perguntas_administrativo.json';
+            } else if (userType === 'docente') {
+                jsonFile = './perguntas_docente.json';
+            }
 
-    let jsonFile;
-    if (userType === 'administrativo') {
-        jsonFile = 'perguntas_administrativo.json';
-    } else if (userType === 'docente') {
-        jsonFile = 'perguntas_docente.json';
-    }
+            console.log("Carregando arquivo JSON:", jsonFile);
 
-    console.log("Carregando arquivo JSON:", jsonFile);
-
-    fetch(jsonFile)
-        .then(response => response.json())
-        .then(data => {
-            // Função para carregar as perguntas
-            populateForm(data);
-        })
-        .catch(error => console.error("Erro ao carregar o arquivo JSON: ", error));
-}
-
-// Função para exibir as perguntas no formulário
-function populateForm(questions) {
-    const formContainer = document.getElementById('formContainer');
-    formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
-
-    questions.forEach((question, index) => {
-        const questionDiv = document.createElement('div');
-        questionDiv.classList.add('question');
-
-        const label = document.createElement('label');
-        label.setAttribute('for', `q${index + 1}`);
-        label.textContent = question.pergunta;
-        questionDiv.appendChild(label);
-
-        const ratingScale = document.createElement('div');
-        ratingScale.classList.add('rating-scale');
-
-        const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
-        const disagreeText = document.createElement('span');
-        disagreeText.textContent = scaleText[0];
-        ratingScale.appendChild(disagreeText);
-
-        for (let i = 1; i <= 5; i++) {
-            const label = document.createElement('label');
-            const radio = document.createElement('input');
-            radio.setAttribute('type', 'radio');
-            radio.setAttribute('name', `q${index + 1}`);
-            radio.setAttribute('value', i);
-            radio.classList.add('form-radio');
-            label.appendChild(radio);
-            label.appendChild(document.createTextNode(i));
-            ratingScale.appendChild(label);
+            fetch(jsonFile)
+                .then(response => response.json())
+                .then(data => {
+                    // Função para carregar as perguntas
+                    populateForm(data);
+                })
+                .catch(error => console.error("Erro ao carregar o arquivo JSON: ", error));
         }
 
-        const agreeText = document.createElement('span');
-        agreeText.textContent = scaleText[1];
-        ratingScale.appendChild(agreeText);
+        // Função para exibir as perguntas no formulário
+        function populateForm(questions) {
+            const formContainer = document.getElementById('formContainer');
+            formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
 
-        questionDiv.appendChild(ratingScale);
-        formContainer.appendChild(questionDiv);
-    });
-}
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
 
-// Chamar a função de carregar perguntas ao carregar a página do formulário
-window.onload = function() {
-    const isFormPage = window.location.pathname.includes('formulario');
-    if (isFormPage) {
-        loadQuestions();
-    }
-};
-</script>
+                const label = document.createElement('label');
+                label.setAttribute('for', `q${index + 1}`);
+                label.textContent = question.pergunta;
+                questionDiv.appendChild(label);
+
+                const ratingScale = document.createElement('div');
+                ratingScale.classList.add('rating-scale');
+
+                const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
+                const disagreeText = document.createElement('span');
+                disagreeText.textContent = scaleText[0];
+                ratingScale.appendChild(disagreeText);
+
+                for (let i = 1; i <= 5; i++) {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.setAttribute('type', 'radio');
+                    radio.setAttribute('name', `q${index + 1}`);
+                    radio.setAttribute('value', i);
+                    radio.classList.add('form-radio');
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(i));
+                    ratingScale.appendChild(label);
+                }
+
+                const agreeText = document.createElement('span');
+                agreeText.textContent = scaleText[1];
+                ratingScale.appendChild(agreeText);
+
+                questionDiv.appendChild(ratingScale); questionDiv.appendChild(ratingScale);
+                formContainer.appendChild(questionDiv);
+            });
+        } 
+// Função para carregar perguntas ao carregar a página do formulário
+        window.onload = function() {
+            loadQuestions();
+        };
+
+        // Modo noturno
+        const toggleDarkMode = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        function toggleMode() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salvar no localStorage
+        }
+
+        function loadDarkModePreference() {
+            const darkModePreference = localStorage.getItem('darkMode');
+            if (darkModePreference === 'enabled') {
+                body.classList.add('dark-mode');
+                toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
+            }
+        }
+
+        window.onload = function() {
+            loadDarkModePreference();
+            toggleDarkMode.addEventListener('click', toggleMode);  // Ativar a alternância de modo escuro
+            loadQuestions();  // Carregar as perguntas ao carregar a página
+        };
+    </script>
 </body>
 </html>

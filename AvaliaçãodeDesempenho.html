@@ -196,8 +196,9 @@ function loadQuestions() {
             return response.json();
         })
         .then(data => {
-            // Acessa as perguntas corretas dentro do JSON
-            const questions = data.administrativo || data.docente; 
+            console.log("Dados carregados:", data); // Verifique o que está sendo retornado
+            // Se o arquivo carregado for para administrativo, vamos carregar administrativo. Se for docente, carregamos docente
+            const questions = data.administrativo || data.docente;
             if (questions) {
                 populateForm(questions); // Preenche o formulário com as perguntas
             } else {

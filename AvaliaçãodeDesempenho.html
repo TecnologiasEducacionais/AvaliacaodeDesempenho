@@ -197,9 +197,9 @@ function loadQuestions() {
 
     let jsonFile;
     if (userType === 'administrativo') {
-        jsonFile = 'https://raw.githubusercontent.com/TecnologiasEducacionais/AvaliacaodeDesempenho/main/perguntas_administrativo.json';
+        jsonFile = 'perguntas_administrativo.json';
     } else if (userType === 'docente') {
-        jsonFile = 'https://raw.githubusercontent.com/TecnologiasEducacionais/AvaliacaodeDesempenho/main/perguntas_docente.json';
+        jsonFile = 'perguntas_docente.json';
     }
 
     console.log("Carregando arquivo JSON:", jsonFile);

@@ -191,8 +191,13 @@ function redirectToForm(userType) {
 
 // Função que será chamada na página do formulário para carregar as perguntas
 function loadQuestions() {
-    const userType = localStorage.getItem('userType'); // obtém o tipo de usuário (administrativo ou docente)
+    const userType = localStorage.getItem('userType'); // Obtém o tipo de usuário (administrativo ou docente)
     
+    if (!userType) {
+        console.error('Tipo de usuário não definido.');
+        return; // Se não houver tipo de usuário, não tenta carregar as perguntas
+    }
+
     let jsonFile;
     if (userType === 'administrativo') {
         jsonFile = 'https://raw.githubusercontent.com/TecnologiasEducacionais/AvaliacaodeDesempenho/main/perguntas_administrativo.json';
@@ -201,12 +206,18 @@ function loadQuestions() {
     }
 
     fetch(jsonFile)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao carregar o arquivo JSON');
+            }
+            return response.json();
+        })
         .then(data => {
-            // Chama a função para exibir as perguntas no formulário
             displayQuestions(data);
         })
-        .catch(error => console.error('Erro ao carregar as perguntas:', error));
+        .catch(error => {
+            console.error('Erro ao carregar as perguntas:', error);
+        });
 }
 
 // Função para exibir as perguntas no formulário
@@ -215,28 +226,22 @@ function displayQuestions(questions) {
     formContainer.innerHTML = ''; // Limpa o formulário antes de exibir as perguntas
 
     questions.forEach((question, index) => {
-        // Cria um elemento div para cada pergunta
         const questionDiv = document.createElement('div');
         questionDiv.classList.add('question');
 
-        // Adiciona o label da pergunta
         const label = document.createElement('label');
         label.setAttribute('for', `q${index + 1}`);
         label.textContent = question.pergunta;
         questionDiv.appendChild(label);
 
-        // Cria a escala de avaliação (1 a 5) com base nos pesos fornecidos no JSON
         const ratingScale = document.createElement('div');
         ratingScale.classList.add('rating-scale');
 
         const scaleText = ['Discordo totalmente', 'Concordo totalmente'];
-
-        // Adiciona o texto 'Discordo totalmente' à esquerda
         const disagreeText = document.createElement('span');
         disagreeText.textContent = scaleText[0];
         ratingScale.appendChild(disagreeText);
 
-        // Cria os botões de radio (1 a 5)
         for (let i = 1; i <= 5; i++) {
             const label = document.createElement('label');
             const radio = document.createElement('input');
@@ -249,80 +254,23 @@ function displayQuestions(questions) {
             ratingScale.appendChild(label);
         }
 
-        // Adiciona o texto 'Concordo totalmente' à direita
         const agreeText = document.createElement('span');
         agreeText.textContent = scaleText[1];
         ratingScale.appendChild(agreeText);
 
-        // Adiciona a escala de avaliação ao div da pergunta
         questionDiv.appendChild(ratingScale);
-
-        // Adiciona a pergunta ao contêiner do formulário
         formContainer.appendChild(questionDiv);
     });
 }
 
-// Função que será chamada ao submeter o formulário para calcular o total
-function submitForm(event) {
-    event.preventDefault();
-
-    let totalScore = 0;
-    const questions = document.querySelectorAll('.question');
-
-    questions.forEach((question, index) => {
-        const selectedValue = document.querySelector(`input[name="q${index + 1}"]:checked`);
-        if (selectedValue) {
-            totalScore += parseInt(selectedValue.value);
-        }
-    });
-
-    // Avalia a pontuação final
-    let evaluationResult;
-    if (totalScore >= 120) {
-        evaluationResult = 'Excelente';
-    } else if (totalScore >= 90) {
-        evaluationResult = 'Bom';
-    } else if (totalScore >= 60) {
-        evaluationResult = 'Regular';
-    } else {
-        evaluationResult = 'Insatisfatório';
-    }
-
-    // Exibe o resultado
-    Swal.fire({
-        title: 'Resultado da Avaliação',
-        text: `Pontuação total: ${totalScore}\nResultado: ${evaluationResult}`,
-        icon: 'success'
-    });
-}
-
-// Modo noturno
-const toggleDarkMode = document.getElementById('darkModeToggle');
-const body = document.body;
-
-function toggleMode() {
-    const isDarkMode = body.classList.toggle('dark-mode');
-    toggleDarkMode.textContent = isDarkMode ? '☀️' : '🌙';
-    localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');  // Salvar no localStorage
-}
-
-function loadDarkModePreference() {
-    const darkModePreference = localStorage.getItem('darkMode');
-    if (darkModePreference === 'enabled') {
-        body.classList.add('dark-mode');
-        toggleDarkMode.textContent = '☀️';  // Mostrar o ícone de sol
-    }
-}
-
+// Chamar a função de carregar perguntas ao carregar a página do formulário
 window.onload = function() {
-    loadDarkModePreference();
-    toggleDarkMode.addEventListener('click', toggleMode);  // Ativar a alternância de modo escuro
-
-    // Carregar as perguntas no formulário após o DOM ser carregado
-    if (window.location.pathname.includes('formulario')) {
+    const isFormPage = window.location.pathname.includes('formulario');
+    if (isFormPage) {
         loadQuestions();
     }
 };
 </script>
+
 </body>
 </html>

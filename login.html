@@ -115,9 +115,8 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js"></script>
-
     <script>
-        // Configuração do Firebase
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDYVLQlZ0koUMD8A44if7epI_KwuXlqgMw",
             authDomain: "avaliacaoodedesempenho.firebaseapp.com",
@@ -128,26 +127,18 @@
             measurementId: "G-WQTCS7G2LN"
         };
 
-        // Inicializa o Firebase
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Função de login
+        // Function to handle login
         function login() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
-            if (email === "" || password === "") {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Campos vazios',
-                    text: 'Por favor, preencha todos os campos.',
-                });
-                return;
-            }
-
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
+                    // Signed in
                     const user = userCredential.user;
                     Swal.fire({
                         icon: 'success',
@@ -155,7 +146,7 @@
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        // Aqui redirecionamos para a página do Google Apps Script
+                        // Redirect to Google Apps Script with email parameter
                         window.location.href = "https://script.google.com/macros/s/AKfycbzCJXaqjUM8bQBV-PtfnuIrnxHfabPdY52YHH4aC2yLRt_kdZ4Fjvq6D7GqgUbpLFWn/exec?userEmail=" + encodeURIComponent(user.email);
                     });
                 })
